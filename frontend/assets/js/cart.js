@@ -2,7 +2,7 @@
 // CART PAGE - FETCH, UPDATE, REMOVE (with Header Auth)
 // ============================================
 
-const API_BASE_URL = 'http://localhost:5000'; // Change to your backend URL
+const API_BASE_URL = 'https://fastbuy-iewu.onrender.com/'; // Change to your backend URL
 
 // Helper: Get auth token
 function getAuthToken() {

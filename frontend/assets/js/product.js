@@ -2,7 +2,7 @@
 // FASTBUY - PRODUCT DETAIL PAGE (with Reviews)
 // ============================================
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'https://fastbuy-iewu.onrender.com/';
 
 // Helper: Get auth token
 function getAuthToken() {

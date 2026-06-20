@@ -2,7 +2,7 @@
 // SHOP PAGE - PRODUCT LISTING, FILTERS, PAGINATION (with Header Auth)
 // ============================================
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'https://fastbuy-iewu.onrender.com/';
 
 // ---------- Helper Functions ----------
 function getAuthToken() {
