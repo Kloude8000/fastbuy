@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Product details - FastBuy">
+    <title>Product | FastBuy</title>
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/layout.css">
+    <!-- <link rel="stylesheet" href="../assets/css/components.css"> -->
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/product.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <link rel="icon" type="image/png" href="../assets/images/logo.jpg">
+</head>
+<body>
+
+    <div id="header"></div>
+
+    <main class="product-main">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <ol>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#" id="breadcrumb-category">Products</a></li>
+                    <li aria-current="page" id="breadcrumb-product">Loading...</li>
+                </ol>
+            </nav>
+
+            <!-- Product Details Section -->
+            <div class="product-detail" id="product-detail">
+                <div class="product-gallery">
+                    <img id="product-image" src="" alt="Product image" class="product-main-image">
+                </div>
+                <div class="product-info">
+                    <h1 id="product-name">Loading...</h1>
+                    <div class="product-rating">
+                        <div class="stars" id="product-stars"></div>
+                        <span id="product-review-count"></span>
+                    </div>
+                    <div class="product-pricing" id="product-pricing">
+                        <span class="current-price"></span>
+                        <span class="old-price"></span>
+                    </div>
+                    <div class="product-description" id="product-description"></div>
+                    <div class="product-actions">
+                        <div class="quantity-selector">
+                            <label for="quantity">Quantity:</label>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1" max="99">
+                        </div>
+                        <button id="add-to-cart-btn" class="btn btn-primary">Add to Cart</button>
+                        <button id="wishlist-btn" class="btn btn-secondary">Add to Wishlist</button>
+                    </div>
+                    <div class="product-meta">
+                        <div>
+                            <p><strong>Category:</strong> <span id="product-category"></span></p>
+                            <p><strong>SKU:</strong> <span id="product-sku">N/A</span></p>
+                        </div>
+                        <div class="to-cart">
+                            <a href="cart.html">Go to cart</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <section class="reviews-section">
+                <h2>Customer Reviews</h2>
+                <div id="reviews-list" class="reviews-list">
+                    <p>Loading reviews...</p>
+                </div>
+                <!-- Write a Review (visible only when logged in) -->
+                <div id="write-review" class="write-review" style="display: none;">
+                    <h3>Write a Review</h3>
+                    <form id="review-form">
+                        <div class="form-group">
+                            <label>Rating</label>
+                            <div class="rating-input">
+                                <span class="star" data-rating="1">☆</span>
+                                <span class="star" data-rating="2">☆</span>
+                                <span class="star" data-rating="3">☆</span>
+                                <span class="star" data-rating="4">☆</span>
+                                <span class="star" data-rating="5">☆</span>
+                            </div>
+                            <input type="hidden" id="rating-value" name="rating" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="review-comment">Your Review</label>
+                            <textarea id="review-comment" name="comment" rows="4" required placeholder="Share your experience with this product..."></textarea>
+                        </div>
+                        <button type="submit" id="submit-review-btn" class="btn btn-primary">Submit Review</button>
+                        <div id="review-message"></div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Related Products -->
+            <section class="related-products">
+                <h2>You May Also Like</h2>
+                <div id="related-grid" class="product-grid">
+                    <p>Loading...</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- <div id="footer"></div> -->
+
+    <script src="../assets/js/hamburger.js"></script>
+    <script src="../assets/js/loaderScript.js"></script>
+    <script src="../assets/js/product.js"></script>
+</body>
+</html>

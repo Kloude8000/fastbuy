@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Your shopping cart - FastBuy">
+    <title>Shopping Cart | FastBuy</title>
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/layout.css">
+    <!-- <link rel="stylesheet" href="../assets/css/components.css"> -->
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/cart.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <link rel="icon" type="image/png" href="../assets/images/logo.jpg">
+</head>
+<body>
+
+    <div id="header"></div>
+
+    <main class="cart-main">
+        <div class="container cart-container">
+            <h1 class="cart-title">Shopping Cart</h1>
+            
+            <div id="cart-content">
+                <!-- Loading state -->
+                <div id="cart-loading" class="cart-loading">
+                    <i class="fas fa-spinner fa-spin"></i> Loading cart...
+                </div>
+
+                <!-- Empty cart state (hidden by default) -->
+                <div id="cart-empty" class="cart-empty" style="display: none;">
+                    <i class="fas fa-shopping-cart"></i>
+                    <p>Your cart is empty.</p>
+                    <a href="shop.html" class="btn btn-primary">Continue Shopping</a>
+                </div>
+
+                <!-- Cart items container (hidden by default) -->
+                <div id="cart-items-container" style="display: none;">
+                    <div class="cart-grid">
+                        <!-- Items table -->
+                        <div class="cart-items">
+                            <div class="cart-header">
+                                <div class="cart-col-product">Product</div>
+                                <div class="cart-col-price">Price</div>
+                                <div class="cart-col-quantity">Quantity</div>
+                                <div class="cart-col-subtotal">Subtotal</div>
+                                <div class="cart-col-remove"></div>
+                            </div>
+                            <div id="cart-items-list"></div>
+                        </div>
+
+                        <!-- Cart summary sidebar -->
+                        <aside class="cart-summary">
+                            <h2>Order Summary</h2>
+                            <div class="summary-row">
+                                <span>Subtotal</span>
+                                <span id="summary-subtotal">$0.00</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Shipping</span>
+                                <span>Calculated at checkout</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span>Total</span>
+                                <span id="summary-total">$0.00</span>
+                            </div>
+                            <button id="checkout-btn" class="btn btn-primary btn-block">Proceed to Checkout</button>
+                            <a href="shop.html" class="continue-shopping">← Continue Shopping</a>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- <div id="footer"></div> -->
+
+    <script src="../assets/js/hamburger.js"></script>
+    <script src="../assets/js/loaderScript.js"></script>
+    <script src="../assets/js/cart.js"></script>
+</body>
+</html>

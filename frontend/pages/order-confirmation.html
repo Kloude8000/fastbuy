@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Order confirmation - FastBuy">
+    <title>Order Confirmation | FastBuy</title>
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/layout.css">
+    <!-- <link rel="stylesheet" href="../assets/css/components.css"> -->
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/order-confirmation.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <link rel="icon" type="image/png" href="../assets/images/logo.jpg">
+</head>
+<body>
+
+    <div id="header"></div>
+
+    <main class="confirmation-main">
+        <div class="container confirmation-container">
+            <!-- Success Header -->
+            <div class="confirmation-header">
+                <i class="fas fa-check-circle"></i>
+                <h1>Thank You for Your Order!</h1>
+                <p>Your order has been placed successfully.</p>
+            </div>
+
+            <!-- Order Details Section -->
+            <div class="confirmation-card" id="order-details">
+                <div class="confirmation-loading">
+                    <i class="fas fa-spinner fa-spin"></i> Loading order details...
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="confirmation-actions">
+                <a href="shop.html" class="btn btn-secondary">Continue Shopping</a>
+                <a href="orders.html" class="btn btn-primary">View Order History</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- <div id="footer"></div> -->
+
+    <script src="../assets/js/hamburger.js"></script>
+    <script src="../assets/js/loaderScript.js"></script>
+    <script src="../assets/js/order-confirmation.js"></script>
+</body>
+</html>

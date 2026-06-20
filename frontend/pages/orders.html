@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Your order history - FastBuy">
+    <title>My Orders | FastBuy</title>
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/layout.css">
+    <!-- <link rel="stylesheet" href="../assets/css/components.css"> -->
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/orders.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <link rel="icon" type="image/png" href="../assets/images/logo.jpg">
+</head>
+<body>
+
+    <div id="header"></div>
+
+    <main class="orders-main">
+        <div class="container orders-container">
+            <h1 class="orders-title">My Orders</h1>
+
+            <div id="orders-content">
+                <!-- Loading state -->
+                <div id="orders-loading" class="orders-loading">
+                    <i class="fas fa-spinner fa-spin"></i> Loading orders...
+                </div>
+
+                <!-- Empty state (hidden by default) -->
+                <div id="orders-empty" class="orders-empty" style="display: none;">
+                    <i class="fas fa-shopping-bag"></i>
+                    <p>You haven't placed any orders yet.</p>
+                    <a href="shop.html" class="btn btn-primary">Start Shopping</a>
+                </div>
+
+                <!-- Orders list container -->
+                <div id="orders-list" class="orders-list" style="display: none;"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- <div id="footer"></div> -->
+
+    <script src="../assets/js/hamburger.js"></script>
+    <script src="../assets/js/loaderScript.js"></script>
+    <script src="../assets/js/orders.js"></script>
+</body>
+</html>

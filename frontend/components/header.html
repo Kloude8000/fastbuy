@@ -1,0 +1,50 @@
+<!-- 
+  FASTBUY HEADER - MODIFIED FOR AUTH INTEGRATION
+  Changes:
+  - Added id="loginListItem" to the Sign in list item
+  - Added hidden list item id="userListItem" for logged-in user display
+  - Added id="cartIconLink" to the cart icon anchor
+-->
+<header>
+    <div class="header-container">
+        <div class="logo">
+            <a href="#"><img src="../assets/images/logo.webp" alt="FastBuy Logo"></a>
+            <span class="brand-name">FastBuy</span>
+        </div>
+        <nav class="header-nav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact</a></li>
+                <!-- Sign in link (visible when logged out) -->
+                <li id="loginListItem"><a href="login.html" id="loginLink">Sign in</a></li>
+                <!-- Logged-in user display (hidden by default) -->
+                <li id="userListItem" style="display: none;">
+                    <span id="userDisplayName"></span>
+                    <a href="profile.html" style="margin-left: 10px;">Profile</a>
+                    <a href="admin.html" id="adminLink" style="margin-left: 10px; display: none;">Admin</a>
+                    <a href="#" id="logoutLink" style="margin-left: 10px;">Logout</a>
+                </li>
+            </ul>
+        </nav>
+        <div class="search-cart">
+            <!-- <input type="text" placeholder="Search products...">
+            <button><i class="fas fa-search"></i></button> -->
+            <a href="cart.html" id="cartIconLink">
+                <i class="fas fa-shopping-cart"></i>
+                <!-- <span id="cart-count" class="cart-count">0</span> -->
+            </a>
+        </div>
+        <button
+            class="hamburger"
+            aria-label="Toggle menu"
+            aria-expanded="false"
+            onclick="toggleMenu(this)">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+        </button>
+        <div class="overlay" onclick="closeMenu()"></div>
+    </div>
+</header>

@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop | FastBuy</title>
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/layout.css">
+    <!-- <link rel="stylesheet" href="../assets/css/components.css"> -->
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/shop.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <link rel="icon" type="image/png" href="../assets/images/logo.jpg">
+</head>
+<body>
+
+    <div id="header"></div>
+
+    <main class="shop-main">
+        <div class="container shop-container">
+            <h1 class="shop-title">Shop All Products</h1>
+
+            <!-- Filters Row (Category & Sale/New) -->
+            <div class="shop-filters">
+                <div class="filter-group">
+                    <label>Category:</label>
+                    <div class="filter-chips" id="category-filters">
+                        <button class="filter-chip is-active" data-category="all">All</button>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Show:</label>
+                    <div class="filter-chips" id="tag-filters">
+                        <button class="filter-chip is-active" data-tag="all">All Products</button>
+                        <button class="filter-chip" data-tag="sales">On Sale</button>
+                        <button class="filter-chip" data-tag="new">New Arrivals</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search & Sort Row -->
+            <div class="shop-toolbar">
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Search products...">
+                    <button id="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="sort-box">
+                    <label for="sort-select">Sort by:</label>
+                    <select id="sort-select">
+                        <option value="newest">Newest</option>
+                        <option value="price_asc">Price: Low to High</option>
+                        <option value="price_desc">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="products-grid" class="products-grid">
+                <div class="loading-spinner">Loading products...</div>
+            </div>
+
+            <!-- Pagination -->
+            <div id="pagination" class="pagination">
+                <!-- dynamic pagination buttons -->
+            </div>
+        </div>
+    </main>
+
+    <!-- <div id="footer"></div> -->
+
+    <script src="../assets/js/hamburger.js"></script>
+    <script src="../assets/js/loaderScript.js"></script>
+    <script src="../assets/js/shop.js"></script>
+</body>
+</html>

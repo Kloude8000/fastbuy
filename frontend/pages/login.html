@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--SEO Meta Tags-->
+    <meta name="description" content="FastBuy | Modern Online Shopping Platform">
+    <meta name="keywords" content="FastBuy, online shopping, modern shopping, fastbuy shopping">
+    <meta name="author" content="fastbuy">
+    <!--Open Graph Meta Tags for Social Media Sharing-->
+    <meta property="og:title" content="FastBuy - Modern Online Shopping Platform">
+    <meta property="og:description" content="FastBuy is your modern online shopping destination to find the latest products at competitive prices. Shop fashion, electronics, home goods, and more anytime on FastBuy.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://fastbuy.com">
+    <meta property="og:image" content="assets/images/fastbuy-og-image.jpg">
+    <meta property="og:site_name" content="FastBuy">
+    <meta property="og:locale" content="en_US">
+    <title>FastBuy – Login</title>
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/layout.css">
+    <!-- <link rel="stylesheet" href="../assets/css/home.css"> -->
+    <!-- <link rel="stylesheet" href="../assets/css/components.css"> -->
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/login.css">
+    <!--Google Font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=BBH+Bogle&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <!--Font Awesome-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!--favicon-->
+    <link rel="icon" type="image/png" href="../assets/images/logo.jpg">
+</head>
+<body>
+
+    <!--HEADER LOADS HERE-->
+    <!-- <div id="header"></div> -->
+
+    <div class="login-container">
+        <div class="login-card">
+            <h2>Welcome Back</h2>
+            <p class="subtitle">Sign in to your FastBuy account</p>
+            
+            <form id="loginForm" novalidate>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="you@example.com"
+                        autocomplete="email"
+                    >
+                    <small class="error-message" id="emailError"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                    >
+                    <small class="error-message" id="passwordError"></small>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe"> Remember me
+                    </label>
+                    <a href="forgot-password.html" class="forgot-link">Forgot Password?</a>
+                </div>
+
+                <button type="submit" id="submitBtn" class="login-btn">
+                    Sign In
+                </button>
+            </form>
+
+            <div id="messageContainer"></div>
+            
+            <div class="register-link">
+                Don't have an account? <a href="register.html">Create one</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/login.js"></script>
+    <script src="../assets/js/loaderScript.js"></script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+
+/*---------------------------------------------*/
+
+/* mobile view*/
+@media (max-width: 460px) {
+    /**/
+    .header-container {
+        padding: 0;
+    }
+
+    .header-nav {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: min(18.75rem, 80vw);
+        height: 100vh;
+        background: var(--surface);
+        padding: 5rem 1.5rem 1.5rem;
+        transform: translateX(100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 101;
+        overflow-y: auto;
+    }
+
+    .header-nav ul {
+        flex-direction: column;
+        gap: 0.625rem;
+    }
+
+    .header-nav ul li a {
+        border-bottom: 0.0625rem solid var(--accent);
+        display: block;
+        padding: 0.875rem 1rem;
+        text-decoration: none;
+        font-size: var(--p-size);
+        border-radius: 0.5rem;
+        transition: all 0.2s ease;
+    }
+
+    #userListItem {
+        position: relative;
+    }
+
+    #userDisplayName {
+        display: block;
+        position: absolute;
+        right: 0;
+        bottom: -70px;
+    }
+
+    /* hamburger menu */
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        gap: 0.3125rem;
+        z-index: 102;
+    }
+
+    .line {
+        display: block;
+        width: 1.5rem;
+        height: 0.1875rem;
+        background: var(--text-primary);
+        border-radius: 0.125rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 100;
+    } 
+
+    /* Open state */
+    body.nav-open {
+        overflow: hidden;
+    }
+
+    body.nav-open nav {
+        transform: translateX(0);
+    } 
+
+    body.nav-open .overlay {
+        opacity: 1;
+        visibility: visible;
+    }  
+
+    body.nav-open .hamburger .line:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    body.nav-open .hamburger .line:nth-child(2) {
+        opacity: 0;
+        transform: scaleX(0);
+    }
+
+    body.nav-open .hamburger .line:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    body.nav-open .hamburger .line {
+        background-color: var(--text-primary);
+    }
+
+    .search-cart input {
+        display: none;
+    }
+
+    
+    /* Register Page */
+    
+
+    /* footer styling */
+    .footer-newsletter {
+        padding: 1.5rem 0.5rem;
+    }
+
+    .footer-newsletter-inner {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer-newsletter-form {
+        flex-direction: column;
+    }
+
+    .footer-input {
+        max-height: 1.625rem;
+    }
+
+    .footer-legal {
+        flex-wrap: nowrap;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .footer-grid nav:first-of-type {
+        padding-top: 8px;
+    }
+}
