@@ -84,7 +84,7 @@ async function updateHeaderAuth() {
 async function checkAdmin() {
     const token = getAuthToken();
     if (!token) {
-        window.location.href = 'login.html';
+        window.location.href = '/pages/login.html';
         return false;
     }
     try {
@@ -93,7 +93,7 @@ async function checkAdmin() {
         const user = await response.json();
         if (user.role !== 'admin') {
             alert('Admin access only. You are logged in as: ' + (user.role || 'customer'));
-            window.location.href = 'index.html';
+            window.location.href = '/index.html';
             return false;
         }
         return true;
@@ -101,7 +101,7 @@ async function checkAdmin() {
         console.error('Admin check error:', err);
         alert('Authentication error. Please log in again.');
         clearAuth();
-        window.location.href = 'login.html';
+        window.location.href = '/pages/login.html';
         return false;
     }
 }

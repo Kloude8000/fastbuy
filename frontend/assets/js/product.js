@@ -36,7 +36,7 @@ async function updateHeaderAuth() {
     if (!token) {
         if (loginListItem) loginListItem.style.display = '';
         if (userListItem) userListItem.style.display = 'none';
-        if (cartIcon) cartIcon.href = 'login.html';
+        if (cartIcon) cartIcon.href = '/pages/login.html';
         return;
     }
 
@@ -49,7 +49,7 @@ async function updateHeaderAuth() {
             if (userDisplayName) userDisplayName.textContent = `Hi, ${user.name}`;
             if (loginListItem) loginListItem.style.display = 'none';
             if (userListItem) userListItem.style.display = '';
-            if (cartIcon) cartIcon.href = 'cart.html';
+            if (cartIcon) cartIcon.href = '/pages/cart.html';
             if (logoutLink) {
                 logoutLink.onclick = (e) => {
                     e.preventDefault();
@@ -61,7 +61,7 @@ async function updateHeaderAuth() {
             clearAuth();
             if (loginListItem) loginListItem.style.display = '';
             if (userListItem) userListItem.style.display = 'none';
-            if (cartIcon) cartIcon.href = 'login.html';
+            if (cartIcon) cartIcon.href = '/pages/login.html';
         }
     } catch (err) {
         console.error('Failed to fetch user profile', err);
@@ -89,7 +89,7 @@ function renderStars(rating) {
 async function loadProduct() {
     const productId = getProductId();
     if (!productId) {
-        window.location.href = 'index.html';
+        window.location.href = '/index.html';
         return;
     }
 
@@ -123,7 +123,7 @@ function displayProduct(data) {
     document.getElementById('breadcrumb-product').innerHTML = product.name;
     if (product.category_name) {
         document.getElementById('breadcrumb-category').innerHTML = product.category_name;
-        document.getElementById('breadcrumb-category').href = `index.html?category=${product.category_id}`;
+        document.getElementById('breadcrumb-category').href = `/index.html?category=${product.category_id}`;
     }
     
     const imageUrl = product.image ? `${API_BASE_URL}/uploads/${product.image}` : 'https://via.placeholder.com/600x600?text=No+Image';
@@ -190,7 +190,7 @@ async function addToCart(productId, quantity) {
     const token = getAuthToken();
     if (!token) {
         alert('Please login to add items to cart');
-        window.location.href = 'login.html';
+        window.location.href = '/pages/login.html';
         return false;
     }
     

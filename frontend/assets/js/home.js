@@ -38,7 +38,7 @@ async function updateHeaderAuth() {
     if (!token) {
         if (loginListItem) loginListItem.style.display = '';
         if (userListItem) userListItem.style.display = 'none';
-        if (cartIcon) cartIcon.href = 'login.html';
+        if (cartIcon) cartIcon.href = '/pages/login.html';
         if (adminLink) adminLink.style.display = 'none';  // hide admin link
         return;
     }
@@ -52,7 +52,7 @@ async function updateHeaderAuth() {
             if (userDisplayName) userDisplayName.textContent = `Hi, ${user.name}`;
             if (loginListItem) loginListItem.style.display = 'none';
             if (userListItem) userListItem.style.display = '';
-            if (cartIcon) cartIcon.href = 'cart.html';
+            if (cartIcon) cartIcon.href = '/pages/cart.html';
             
             // Show admin link only if user.role is 'admin'
             if (adminLink) {
@@ -74,7 +74,7 @@ async function updateHeaderAuth() {
             clearAuth();
             if (loginListItem) loginListItem.style.display = '';
             if (userListItem) userListItem.style.display = 'none';
-            if (cartIcon) cartIcon.href = 'login.html';
+            if (cartIcon) cartIcon.href = '/pages/login.html';
             if (adminLink) adminLink.style.display = 'none';
         }
     } catch (err) {
@@ -292,7 +292,7 @@ async function addToCart(productId, quantity = 1) {
     const token = getAuthToken();
     if (!token) {
         alert('Please login to add items to cart');
-        window.location.href = 'login.html';
+        window.location.href = '/pages/login.html';
         return false;
     }
 

@@ -27,6 +27,6 @@ async function loadComponent(id, file) {
 
 // Load components on every page
 document.addEventListener("DOMContentLoaded", () => {
-    loadComponent("header", "../components/header.html");
-    loadComponent("footer", "../components/footer.html");
+    loadComponent("header", "/components/header.html");
+    loadComponent("footer", "/components/footer.html");
 });

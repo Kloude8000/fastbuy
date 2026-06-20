@@ -217,7 +217,7 @@ function handleSuccess(data) {
     
     // Redirect to login or home page after 2 seconds
     setTimeout(() => {
-        window.location.href = 'login.html';
+        window.location.href = '/pages/login.html';
     }, 2000);
 }
 

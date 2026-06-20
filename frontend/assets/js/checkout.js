@@ -27,7 +27,7 @@ function clearAuth() {
 function requireAuth() {
     const token = getAuthToken();
     if (!token) {
-        window.location.href = 'login.html';
+        window.location.href = '/pages/login.html';
         return false;
     }
     return true;
@@ -45,7 +45,7 @@ async function updateHeaderAuth() {
     if (!token) {
         if (loginListItem) loginListItem.style.display = '';
         if (userListItem) userListItem.style.display = 'none';
-        if (cartIcon) cartIcon.href = 'login.html';
+        if (cartIcon) cartIcon.href = '/pages/login.html';
         return;
     }
 
@@ -58,7 +58,7 @@ async function updateHeaderAuth() {
             if (userDisplayName) userDisplayName.textContent = `Hi, ${user.name}`;
             if (loginListItem) loginListItem.style.display = 'none';
             if (userListItem) userListItem.style.display = '';
-            if (cartIcon) cartIcon.href = 'cart.html';
+            if (cartIcon) cartIcon.href = '/pages/cart.html';
             if (logoutLink) {
                 logoutLink.onclick = (e) => {
                     e.preventDefault();
@@ -70,7 +70,7 @@ async function updateHeaderAuth() {
             clearAuth();
             if (loginListItem) loginListItem.style.display = '';
             if (userListItem) userListItem.style.display = 'none';
-            if (cartIcon) cartIcon.href = 'login.html';
+            if (cartIcon) cartIcon.href = '/pages/login.html';
         }
     } catch (err) {
         console.error('Failed to fetch user profile', err);
@@ -91,7 +91,7 @@ async function loadCartSummary() {
         if (!response.ok) {
             if (response.status === 401) {
                 clearAuth();
-                window.location.href = 'login.html';
+                window.location.href = '/pages/login.html';
                 return;
             }
             throw new Error('Failed to load cart');

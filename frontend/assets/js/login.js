@@ -177,7 +177,7 @@ function handleSuccess(data) {
     // Redirect to home/dashboard page after 1.5 seconds
     setTimeout(() => {
         // You can change this to your desired page (e.g., 'index.html', 'dashboard.html')
-        window.location.href = 'index.html'; // index.html moved up a dir ---------------------------------------
+        window.location.href = '/index.html'; // index.html moved up a dir ---------------------------------------
     }, 1500);
 }
 
@@ -226,7 +226,7 @@ function checkAuth() {
     const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
     if (token) {
         // User already logged in, redirect to home
-        window.location.href = 'index.html';
+        window.location.href = '/index.html';
     }
 }
 
