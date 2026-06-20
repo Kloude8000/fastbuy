@@ -2,7 +2,7 @@
 // ORDER CONFIRMATION PAGE (with Header Auth)
 // ============================================
 
-const API_BASE_URL = 'https://fastbuy-iewu.onrender.com/';
+const API_BASE_URL = 'https://fastbuy-iewu.onrender.com';
 
 // Helper: Get auth token
 function getAuthToken() {

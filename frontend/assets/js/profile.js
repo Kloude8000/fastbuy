@@ -2,7 +2,7 @@
 // USER PROFILE PAGE (with Header Auth & Admin Link)
 // ============================================
 
-const API_BASE_URL = 'https://fastbuy-iewu.onrender.com/';
+const API_BASE_URL = 'https://fastbuy-iewu.onrender.com';
 
 // Auth helpers
 function getAuthToken() {

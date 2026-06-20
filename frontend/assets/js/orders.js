@@ -2,7 +2,7 @@
 // ORDER HISTORY PAGE (with Header Auth)
 // ============================================
 
-const API_BASE_URL = 'https://fastbuy-iewu.onrender.com/';
+const API_BASE_URL = 'https://fastbuy-iewu.onrender.com';
 
 // Auth helpers
 function getAuthToken() {
