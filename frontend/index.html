@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--SEO Meta Tags-->
+        <meta name="description" content="FastBuy | Modern Online Shopping Platform">
+        <meta name="keywords" content="FastBuy, online shopping, modern shopping, fastbuy shopping">
+        <meta name="author" content="fastbuy">
+        <!--Open Graph Meta Tags for Social Media Sharing-->
+        <meta property="og:title" content="FastBuy - Modern Online Shopping Platform">
+        <meta property="og:description" content="FastBuy is your modern online shopping destination to find the latest products at competitive prices. Shop fashion, electronics, home goods, and more anytime on FastBuy.">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://fastbuy.com">
+        <meta property="og:image" content="assets/images/fastbuy-og-image.jpg">
+        <meta property="og:site_name" content="FastBuy">
+        <meta property="og:locale" content="en_US">
+        <title>FastBuy – Modern Online Shopping Platform</title>
+        <link rel="stylesheet" href="assets/css/base.css">
+        <link rel="stylesheet" href="assets/css/layout.css">
+        <link rel="stylesheet" href="assets/css/home.css">
+        <!-- <link rel="stylesheet" href="../assets/css/components.css"> -->
+        <link rel="stylesheet" href="assets/css/responsive.css">
+        <!--Google Font-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=BBH+Bogle&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <!--Font Awesome-->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+        <!--favicon-->
+        <link rel="icon" type="image/png" href="assets/images/logo.jpg">
+    </head>
+    <body>
+
+        <!--HEADER LOADS HERE-->
+        <div id="header"></div>
+
+        <!--Main Content-->
+        <main>
+            <!--Hero Section-->
+            <section class="hero">
+                <div class="hero-container hero-grid">
+                    <div class="hero-copy">
+                        <p class="eyebrow">New season essentials</p>
+                        <h1>Style, Comfort, and Value in One Place</h1>
+                        <p class="subtext">
+                            Discover premium products curated for modern lifestyles. Shop
+                            confidently with fast shipping, secure checkout, and easy returns.
+                        </p>
+
+                        <div class="hero-cta">
+                            <a class="btn btn-primary" href="#">Shop Now</a>
+                            <a class="btn btn-secondary" href="#">View Collections</a>
+                        </div>
+
+                        <ul class="hero-metrics" aria-label="Store highlights">
+                            <li>
+                                <span class="metric-value">30K+</span>
+                                <span class="metric-label">Happy Customers</span>
+                            </li>
+                            <li>
+                                <span class="metric-value">1,200+</span>
+                                <span class="metric-label">Premium Products</span>
+                            </li>
+                            <li>
+                                <span class="metric-value">24/7</span>
+                                <span class="metric-label">Customer Support</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <aside class="hero-card" aria-label="Featured product">
+                        <p class="badge">Featured Product</p>
+                        <h2>Urban Motion Sneakers</h2>
+                        <p>
+                            Lightweight performance with all-day cushioning and a modern
+                            streetwear edge.
+                        </p>
+                        <div class="price-row">
+                            <span class="current-price">$89.00</span>
+                            <span class="old-price">$129.00</span>
+                        </div>
+                        <a class="btn btn-primary btn-block" href="#">Add to Cart</a>
+                    </aside>
+                </div>
+            </section>
+
+            <!--Additional sections like product categories, testimonials, etc. would go here-->
+            <section class="featured" aria-labelledby="featured-heading">
+                <div class="featured-container">
+                    <div class="featured-head">
+                        <div class="featured-intro">
+                            <p class="eyebrow eyebrow-dark">Curated for you</p>
+                            <h2 id="featured-heading">Featured products</h2>
+                            <p class="featured-lede">Hand-picked bestsellers with honest pricing and fast delivery.</p>
+                        </div>
+                        <a class="btn btn-secondary featured-all" href="shop.html">View all</a>
+                    </div>
+
+                    <div class="featured-toolbar" id="featured-toolbar" aria-label="Featured product filters">
+                        <div class="filter-toolbar">
+                            <span class="filter-toolbar-label" id="category-label">Category:</span>
+                            <div class="filter-chips" role="group" aria-labelledby="category-label">
+                                <button type="button" class="filter-chip is-active" data-filter-role="category" data-category="all" aria-pressed="true">
+                                    All
+                                </button>
+                                <button type="button" class="filter-chip" data-filter-role="category" data-category="accessories" aria-pressed="false">
+                                    Accessories
+                                </button>
+                                <button type="button" class="filter-chip" data-filter-role="category" data-category="Apparel" aria-pressed="false">
+                                    Apparel
+                                </button>
+                                <button type="button" class="filter-chip" data-filter-role="category" data-category="electronics" aria-pressed="false">
+                                    Electronics
+                                </button>
+                                <button type="button" class="filter-chip" data-filter-role="category" data-category="audio" aria-pressed="false">
+                                    Audio
+                                </button>
+                            </div>
+                        </div>
+                        <div class="filter-toolbar">
+                            <span class="filter-toolbar-label" id="filterby-label">Show:</span>
+                            <div class="filter-chips" role="group" aria-labelledby="filterby-label">
+                                <button type="button" class="filter-chip is-active" data-filter-role="tag" data-tag="all" aria-pressed="true">
+                                    All products
+                                </button>
+                                <button type="button" class="filter-chip" data-filter-role="tag" data-tag="sales" aria-pressed="false">
+                                    On Sales
+                                </button>
+                                <button type="button" class="filter-chip" data-filter-role="tag" data-tag="new" aria-pressed="false">
+                                    New Arrivals
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- No products found message -->
+                    <p
+                        class="featured-empty"
+                        id="featured-empty"
+                        role="status"
+                        aria-live="polite"
+                        hidden
+                    >
+                        No products match these filters. Try another category or filter.
+                    </p>
+
+                    <!-- featured products grid -->
+                    <div class="featured-grid" id="featured-grid">
+                        <article class="product-card" data-category="accessories" data-sale="true">
+                            <div class="product-media">
+                                <a class="product-media-link" href="#" aria-label="View Aria chronograph">
+                                    <img
+                                        src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80"
+                                        alt="Minimal wristwatch on neutral background"
+                                        width="600"
+                                        height="600"
+                                        loading="lazy"
+                                    />
+                                    <span class="product-badge product-badge--sale">Sale</span>
+                                </a>
+                                <button
+                                    type="button"
+                                    class="product-wish"
+                                    aria-label="Save Aria chronograph to wishlist"
+                                >
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        aria-hidden="true"
+                                    > 
+                                        <path
+                                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
+                            <a class="product-card-link" href="#" style="text-decoration: none;">
+                                <div class="product-body">
+                                    <p class="product-category">Accessories</p>
+                                    <h3 class="product-title">Aria chronograph</h3>
+                                    <div class="product-meta">
+                                        <span class="product-price">$149</span>
+                                        <span class="product-price product-price--was">$189</span>
+                                    </div>
+                                </div>
+                            </a>
+                            <button type="button" class="btn btn-primary product-add">
+                                Add to cart
+                            </button>
+                        </article>    
+                        <article class="product-card" data-category="audio" data-new="true">
+                            <div class="product-media">
+                                <a class="product-media-link" href="#" aria-label="View Nova sound ANC">
+                                    <img
+                                        src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80"
+                                        alt="Wireless headphones on yellow background"
+                                        width="600"
+                                        height="600"
+                                        loading="lazy"
+                                    />
+                                    <span class="product-badge product-badge--new">New</span>
+                                </a>
+                                <button
+                                    type="button"
+                                    class="product-wish"
+                                    aria-label="Save Nova sound headphones to wishlist"
+                                >
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        aria-hidden="true"
+                                    > 
+                                        <path
+                                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
+                            <a class="product-card-link" href="#">
+                                <div class="product-body">
+                                    <p class="product-category">Audio</p>
+                                    <h3 class="product-title">Nova sound ANC</h3>
+                                    <div class="product-meta">
+                                        <span class="product-price">$199</span>
+                                        <span class="product-price product-price--was">$249</span>
+                                    </div>
+                                </div>
+                            </a>
+                            <button type="button" class="btn btn-primary product-add">
+                                Add to cart
+                            </button>
+                        </article>     
+                        <article class="product-card" data-category="Accessories">
+                            <div class="product-media">
+                                <a class="product-media-link" href="#" aria-label="View Mercer leather tote">
+                                    <img
+                                        src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80"
+                                        alt="Leather tote bag"
+                                        width="600"
+                                        height="600"
+                                        loading="lazy"
+                                    />
+                                    <!-- <span class="product-badge product-badge--new">New</span> -->
+                                </a>
+                                <button
+                                    type="button"
+                                    class="product-wish"
+                                    aria-label="Save Mercer leather tote to wishlist"
+                                >
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        aria-hidden="true"
+                                    > 
+                                        <path
+                                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
+                            <a class="product-card-link" href="#" style="text-decoration: none;">
+                                <div class="product-body">
+                                    <p class="product-category">Accessories</p>
+                                    <h3 class="product-title">Mercer leather tote</h3>
+                                    <div class="product-meta">
+                                        <span class="product-price">$145</span>
+                                        <span class="product-price product-price--was">$99</span>
+                                    </div>
+                                </div>
+                            </a>
+                            <button type="button" class="btn btn-primary product-add">
+                                Add to cart
+                            </button>
+                        </article>        
+                        <article class="product-card" data-category="apparel" data-sale="true">
+                            <div class="product-media">
+                                <a class="product-media-link" href="#" aria-label="View Pulse runner sneakers">
+                                    <img
+                                        src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80"
+                                        alt="Red athletic sneaker"
+                                        width="600"
+                                        height="600"
+                                        loading="lazy"
+                                    />
+                                    <span class="product-badge product-badge--sale">Sale</span>
+                                </a>
+                                <button
+                                    type="button"
+                                    class="product-wish"
+                                    aria-label="Save Pulse runner sneakers to wishlist"
+                                >
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        aria-hidden="true"
+                                    > 
+                                        <path
+                                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
+                            <a class="product-card-link" href="#" style="text-decoration: none;">
+                                <div class="product-body">
+                                    <p class="product-category">Apparel</p>
+                                    <h3 class="product-title">Pulse runner sneakers</h3>
+                                    <div class="product-meta">
+                                        <span class="product-price">$112</span>
+                                        <span class="product-price product-price--was">$140</span>
+                                    </div>
+                                </div>
+                            </a>
+                            <button type="button" class="btn btn-primary product-add">
+                                Add to cart
+                            </button>
+                        </article>        
+                    </div>
+                </div>
+            </section>                        
+        </main>
+
+        <!--FOOTER LOADS HERE-->
+        <div id="footer"></div>
+
+        <script src="assets/js/hamburger.js"></script>   
+        <script src="assets/js/loaderScript.js"></script>
+        <script src="assets/js/home.js"></script>
+    </body>
+</html>
