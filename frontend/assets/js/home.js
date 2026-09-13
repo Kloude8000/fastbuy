@@ -1,94 +1,13 @@
 // ============================================
 // FASTBUY - HOME PAGE DYNAMIC CONTENT
-// FULLY INTEGRATED WITH SALE FILTER (BACKEND)
 // ============================================
-
-const API_BASE_URL = 'https://fastbuy-iewu.onrender.com';
-
-// Helper: Get auth token
-function getAuthToken() {
-    return localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-}
-
-function clearAuth() {
-    localStorage.removeItem('authToken');
-    sessionStorage.removeItem('authToken');
-    localStorage.removeItem('user');
-    sessionStorage.removeItem('user');
-}
-
-function authHeaders() {
-    const token = getAuthToken();
-    return {
-        'Content-Type': 'application/json',
-        'Authorization': token ? `Bearer ${token}` : ''
-    };
-}
-
-// ==================== HEADER AUTH ====================
-async function updateHeaderAuth() {
-    const loginListItem = document.getElementById('loginListItem');
-    const userListItem = document.getElementById('userListItem');
-    const userDisplayName = document.getElementById('userDisplayName');
-    const logoutLink = document.getElementById('logoutLink');
-    const cartIcon = document.getElementById('cartIconLink');
-    const adminLink = document.getElementById('adminLink');  // added
-
-    const token = getAuthToken();
-    if (!token) {
-        if (loginListItem) loginListItem.style.display = '';
-        if (userListItem) userListItem.style.display = 'none';
-        if (cartIcon) cartIcon.href = '/pages/login.html';
-        if (adminLink) adminLink.style.display = 'none';  // hide admin link
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/profile`, {
-            headers: authHeaders()
-        });
-        if (response.ok) {
-            const user = await response.json();
-            if (userDisplayName) userDisplayName.textContent = `Hi, ${user.name}`;
-            if (loginListItem) loginListItem.style.display = 'none';
-            if (userListItem) userListItem.style.display = '';
-            if (cartIcon) cartIcon.href = '/pages/cart.html';
-            
-            // Show admin link only if user.role is 'admin'
-            if (adminLink) {
-                if (user.role === 'admin') {
-                    adminLink.style.display = 'inline';
-                } else {
-                    adminLink.style.display = 'none';
-                }
-            }
-            
-            if (logoutLink) {
-                logoutLink.onclick = (e) => {
-                    e.preventDefault();
-                    clearAuth();
-                    window.location.reload();
-                };
-            }
-        } else {
-            clearAuth();
-            if (loginListItem) loginListItem.style.display = '';
-            if (userListItem) userListItem.style.display = 'none';
-            if (cartIcon) cartIcon.href = '/pages/login.html';
-            if (adminLink) adminLink.style.display = 'none';
-        }
-    } catch (err) {
-        console.error('Failed to fetch user profile', err);
-        if (loginListItem) loginListItem.style.display = '';
-        if (userListItem) userListItem.style.display = 'none';
-        if (adminLink) adminLink.style.display = 'none';
-    }
-}
 
 // ==================== LOAD CATEGORIES ====================
 async function loadCategories() {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/categories`);
+        const response = await apiFetch(`${API_BASE_URL}/api/categories`, {
+            redirectOn401: false,
+        });
         if (!response.ok) throw new Error('Failed to load categories');
         const categories = await response.json();
 
@@ -148,7 +67,9 @@ async function loadProducts() {
         const isDefaultView = (currentFilters.category === 'all' && currentFilters.tag === 'all');
         
         if (isDefaultView) {
-            const response = await fetch(`${API_BASE_URL}/api/products/featured/list`);
+            const response = await apiFetch(`${API_BASE_URL}/api/products/featured/list`, {
+                redirectOn401: false,
+            });
             if (!response.ok) throw new Error('Failed to load featured products');
             products = await response.json();
         } else {
@@ -163,7 +84,7 @@ async function loadProducts() {
             if (currentFilters.tag === 'sales') {
                 url += `&sale=true`;
             }
-            const response = await fetch(url);
+            const response = await apiFetch(url, { redirectOn401: false });
             if (!response.ok) throw new Error('Failed to load products');
             const data = await response.json();
             products = data.products;
@@ -177,7 +98,6 @@ async function loadProducts() {
 
         grid.innerHTML = products.map(product => renderProductCard(product)).join('');
         attachCartButtons();
-        attachWishlistButtons();
     } catch (err) {
         console.error('Error loading products:', err);
         grid.innerHTML = '<p class="error-message">Failed to load products. Please try again later.</p>';
@@ -196,9 +116,7 @@ function renderProductCard(product) {
         badgeHtml = `<span class="product-badge product-badge--new">New</span>`;
     }
 
-    const imageUrl = product.image 
-        ? `${API_BASE_URL}/uploads/${product.image}`
-        : 'https://via.placeholder.com/600x600?text=No+Image';
+    const imageUrl = uploadUrl(product.image);
     const categoryName = product.category_name || product.category || 'Uncategorized';
 
     // Price HTML: show old price crossed out if on sale
@@ -210,8 +128,8 @@ function renderProductCard(product) {
     return `
         <article class="product-card" data-category="${categoryName.toLowerCase()}" ${isSale ? 'data-sale="true"' : ''} ${isNew ? 'data-new="true"' : ''}>
             <div class="product-media">
-                <a class="product-media-link" href="./product.html?id=${product.id}" aria-label="${product.name}">
-                    <img src="${imageUrl}" alt="${product.name}" width="600" height="600" loading="lazy" />
+                <a class="product-media-link" href="/pages/product.html?id=${product.id}" aria-label="${escapeAttr(product.name)}">
+                    <img src="${imageUrl}" alt="${escapeAttr(product.name)}" width="600" height="600" loading="lazy" />
                     ${badgeHtml}
                 </a>
                 <button type="button" class="product-wish" data-product-id="${product.id}" aria-label="Save to wishlist">
@@ -220,7 +138,7 @@ function renderProductCard(product) {
                     </svg>
                 </button>
             </div>
-            <a class="product-card-link" href="./product.html?id=${product.id}" style="text-decoration: none;">
+            <a class="product-card-link" href="/pages/product.html?id=${product.id}" style="text-decoration: none;">
                 <div class="product-body">
                     <p class="product-category">${escapeHtml(categoryName)}</p>
                     <h3 class="product-title">${escapeHtml(product.name)}</h3>
@@ -234,16 +152,6 @@ function renderProductCard(product) {
             </button>
         </article>
     `;
-}
-
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-    });
 }
 
 // ==================== FILTER HANDLERS ====================
@@ -291,39 +199,27 @@ function handleTagClick(e) {
 async function addToCart(productId, quantity = 1) {
     const token = getAuthToken();
     if (!token) {
-        alert('Please login to add items to cart');
+        showToast('Please log in to add items to cart', 'info');
         window.location.href = '/pages/login.html';
         return false;
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/cart`, {
+        const response = await apiFetch(`${API_BASE_URL}/api/cart`, {
             method: 'POST',
-            headers: authHeaders(),
-            body: JSON.stringify({ product_id: productId, quantity })
+            body: JSON.stringify({ product_id: productId, quantity }),
         });
         const data = await response.json();
         if (response.ok) {
-            const toast = document.createElement('div');
-            toast.textContent = 'Added to cart!';
-            toast.style.position = 'fixed';
-            toast.style.bottom = '20px';
-            toast.style.right = '20px';
-            toast.style.backgroundColor = '#4caf50';
-            toast.style.color = 'white';
-            toast.style.padding = '10px 20px';
-            toast.style.borderRadius = '5px';
-            toast.style.zIndex = '9999';
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2000);
+            window.location.href = '/pages/cart.html';
             return true;
-        } else {
-            alert(data.message || 'Failed to add item');
-            return false;
         }
+        showToast(data.message || 'Failed to add item', 'error');
+        return false;
     } catch (err) {
+        if (err instanceof ApiError) return false;
         console.error('Add to cart error:', err);
-        alert('Error adding to cart');
+        showToast('Error adding to cart', 'error');
         return false;
     }
 }
@@ -348,29 +244,8 @@ async function cartClickHandler(e) {
     }
 }
 
-function attachWishlistButtons() {
-    document.querySelectorAll('.product-wish').forEach(btn => {
-        btn.removeEventListener('click', wishlistClickHandler);
-        btn.addEventListener('click', wishlistClickHandler);
-    });
-}
-
-function wishlistClickHandler(e) {
-    e.preventDefault();
-    const btn = e.currentTarget;
-    const productId = btn.getAttribute('data-product-id');
-    alert(`Wishlist feature coming soon! Product ID: ${productId}`);
-}
-
 // ==================== INITIALIZATION ====================
-document.addEventListener('headerLoaded', async () => {
-    await updateHeaderAuth();
-});
-
 document.addEventListener('DOMContentLoaded', async () => {
-    if (document.getElementById('loginListItem')) {
-        await updateHeaderAuth();
-    }
     await loadCategories();
     await loadProducts();
 });

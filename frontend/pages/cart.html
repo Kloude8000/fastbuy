@@ -3,79 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="api-base-url" content="">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.fontawesome.com; font-src 'self' https://fonts.gstatic.com https://use.fontawesome.com data:; img-src 'self' data: https: http:; connect-src 'self' http://localhost:5000 https://fastbuy-iewu.onrender.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
     <meta name="description" content="Your shopping cart - FastBuy">
     <title>Shopping Cart | FastBuy</title>
     <link rel="stylesheet" href="../assets/css/base.css">
     <link rel="stylesheet" href="../assets/css/layout.css">
-    <!-- <link rel="stylesheet" href="../assets/css/components.css"> -->
-    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
     <link rel="stylesheet" href="../assets/css/cart.css">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
-    <link rel="icon" type="image/png" href="../assets/images/logo.jpg">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/logo-icon.svg">
 </head>
 <body>
 
     <div id="header"></div>
 
-    <main class="cart-main">
-        <div class="container cart-container">
-            <h1 class="cart-title">Shopping Cart</h1>
-            
+    <main class="page-main cart-page">
+        <div class="container">
+            <p class="section-label">Your bag</p>
+            <h1 class="section-title">Shopping cart</h1>
+
             <div id="cart-content">
-                <!-- Loading state -->
-                <div id="cart-loading" class="cart-loading">
-                    <i class="fas fa-spinner fa-spin"></i> Loading cart...
+                <div id="cart-loading" class="loading-state">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading cart...</p>
                 </div>
 
-                <!-- Empty cart state (hidden by default) -->
-                <div id="cart-empty" class="cart-empty" style="display: none;">
-                    <i class="fas fa-shopping-cart"></i>
-                    <p>Your cart is empty.</p>
-                    <a href="shop.html" class="btn btn-primary">Continue Shopping</a>
+                <div id="cart-empty" class="empty-state" style="display: none;">
+                    <i class="fas fa-shopping-bag"></i>
+                    <h2>Your cart is empty</h2>
+                    <p>Add something you love — we will keep it here for you.</p>
+                    <a href="/pages/shop.html" class="btn btn-primary">Continue shopping</a>
                 </div>
 
-                <!-- Cart items container (hidden by default) -->
-                <div id="cart-items-container" style="display: none;">
-                    <div class="cart-grid">
-                        <!-- Items table -->
-                        <div class="cart-items">
-                            <div class="cart-header">
-                                <div class="cart-col-product">Product</div>
-                                <div class="cart-col-price">Price</div>
-                                <div class="cart-col-quantity">Quantity</div>
-                                <div class="cart-col-subtotal">Subtotal</div>
-                                <div class="cart-col-remove"></div>
-                            </div>
-                            <div id="cart-items-list"></div>
-                        </div>
-
-                        <!-- Cart summary sidebar -->
-                        <aside class="cart-summary">
-                            <h2>Order Summary</h2>
-                            <div class="summary-row">
-                                <span>Subtotal</span>
-                                <span id="summary-subtotal">$0.00</span>
-                            </div>
-                            <div class="summary-row">
-                                <span>Shipping</span>
-                                <span>Calculated at checkout</span>
-                            </div>
-                            <div class="summary-row total">
-                                <span>Total</span>
-                                <span id="summary-total">$0.00</span>
-                            </div>
-                            <button id="checkout-btn" class="btn btn-primary btn-block">Proceed to Checkout</button>
-                            <a href="shop.html" class="continue-shopping">← Continue Shopping</a>
-                        </aside>
+                <div id="cart-items-container" class="cart-layout" style="display: none;">
+                    <div class="cart-items-panel">
+                        <div id="cart-items-list"></div>
                     </div>
+                    <aside class="order-summary-card">
+                        <h2>Order summary</h2>
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="summary-subtotal">$0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Shipping</span>
+                            <span>At checkout</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span id="summary-total">$0.00</span>
+                        </div>
+                        <button type="button" id="checkout-btn" class="btn btn-primary btn-block">Proceed to checkout</button>
+                        <a href="/pages/shop.html" class="summary-link">Continue shopping</a>
+                    </aside>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- <div id="footer"></div> -->
+    <div id="footer"></div>
 
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/toast.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/api.js"></script>
     <script src="../assets/js/hamburger.js"></script>
     <script src="../assets/js/loaderScript.js"></script>
     <script src="../assets/js/cart.js"></script>

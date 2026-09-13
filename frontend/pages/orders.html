@@ -3,46 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="api-base-url" content="">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.fontawesome.com; font-src 'self' https://fonts.gstatic.com https://use.fontawesome.com data:; img-src 'self' data: https: http:; connect-src 'self' http://localhost:5000 https://fastbuy-iewu.onrender.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
     <meta name="description" content="Your order history - FastBuy">
     <title>My Orders | FastBuy</title>
     <link rel="stylesheet" href="../assets/css/base.css">
     <link rel="stylesheet" href="../assets/css/layout.css">
-    <!-- <link rel="stylesheet" href="../assets/css/components.css"> -->
-    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
     <link rel="stylesheet" href="../assets/css/orders.css">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
-    <link rel="icon" type="image/png" href="../assets/images/logo.jpg">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/logo-icon.svg">
 </head>
 <body>
 
     <div id="header"></div>
 
-    <main class="orders-main">
-        <div class="container orders-container">
-            <h1 class="orders-title">My Orders</h1>
+    <main class="page-main">
+        <div class="container">
+            <p class="section-label">Account</p>
+            <h1 class="section-title">Order history</h1>
 
-            <div id="orders-content">
-                <!-- Loading state -->
-                <div id="orders-loading" class="orders-loading">
-                    <i class="fas fa-spinner fa-spin"></i> Loading orders...
+            <div class="account-shell">
+                <nav class="account-nav" aria-label="Account navigation">
+                    <a href="/pages/profile.html">Profile</a>
+                    <a href="/pages/orders.html" class="is-active">Orders</a>
+                </nav>
+
+                <div id="orders-content">
+                    <div id="orders-loading" class="loading-state">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading orders...</p>
+                    </div>
+                    <div id="orders-empty" class="empty-state" style="display: none;">
+                        <i class="fas fa-shopping-bag"></i>
+                        <h2>No orders yet</h2>
+                        <p>When you place an order, it will appear here.</p>
+                        <a href="/pages/shop.html" class="btn btn-primary">Start shopping</a>
+                    </div>
+                    <div id="orders-list" class="orders-list" style="display: none;"></div>
                 </div>
-
-                <!-- Empty state (hidden by default) -->
-                <div id="orders-empty" class="orders-empty" style="display: none;">
-                    <i class="fas fa-shopping-bag"></i>
-                    <p>You haven't placed any orders yet.</p>
-                    <a href="shop.html" class="btn btn-primary">Start Shopping</a>
-                </div>
-
-                <!-- Orders list container -->
-                <div id="orders-list" class="orders-list" style="display: none;"></div>
             </div>
         </div>
     </main>
 
-    <!-- <div id="footer"></div> -->
+    <div id="footer"></div>
 
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/toast.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/api.js"></script>
     <script src="../assets/js/hamburger.js"></script>
     <script src="../assets/js/loaderScript.js"></script>
     <script src="../assets/js/orders.js"></script>

@@ -1,4 +1,5 @@
 const db = require("../config/db");
+const { sendServerError } = require("../middlewares/errorMiddleware");
 
 exports.getRevenueReport = (req, res) => {
   const query = `
@@ -11,10 +12,7 @@ exports.getRevenueReport = (req, res) => {
   `;
 
   db.query(query, (err, result) => {
-    if (err) {
-      return res.status(500).json(err);
-    }
-
+    if (err) return sendServerError(res, err, "Failed to fetch revenue report");
     res.json(result[0]);
   });
 };
@@ -36,9 +34,8 @@ exports.getTopProductsReport = (req, res) => {
 
   db.query(query, (err, results) => {
     if (err) {
-      return res.status(500).json(err);
+      return sendServerError(res, err, "Failed to fetch top products report");
     }
-
     res.json(results);
   });
 };
@@ -62,9 +59,8 @@ exports.getTopCustomersReport = (req, res) => {
 
   db.query(query, (err, results) => {
     if (err) {
-      return res.status(500).json(err);
+      return sendServerError(res, err, "Failed to fetch top customers report");
     }
-
     res.json(results);
   });
 };
@@ -81,10 +77,7 @@ exports.getInventoryReport = (req, res) => {
   `;
 
   db.query(query, (err, results) => {
-    if (err) {
-      return res.status(500).json(err);
-    }
-
+    if (err) return sendServerError(res, err, "Failed to fetch inventory report");
     res.json(results);
   });
 };
@@ -99,10 +92,7 @@ exports.getOrdersReport = (req, res) => {
   `;
 
   db.query(query, (err, results) => {
-    if (err) {
-      return res.status(500).json(err);
-    }
-
+    if (err) return sendServerError(res, err, "Failed to fetch orders report");
     res.json(results);
   });
 };

@@ -2,8 +2,8 @@ const crypto = require("crypto");
 const db = require("../config/db");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../utils/generateToken");
-
 const { sendEmail } = require("../utils/emailService");
+const { sendServerError } = require("../middlewares/errorMiddleware");
 
 
 // REGISTER
@@ -17,7 +17,7 @@ exports.register = (req, res) => {
   const checkUserQuery = "SELECT * FROM users WHERE email = ?";
 
   db.query(checkUserQuery, [email], async (err, result) => {
-    if (err) return res.status(500).json(err);
+    if (err) return sendServerError(res, err, "Registration failed");
 
     if (result.length > 0) {
       return res.status(400).json({ message: "User already exists" });
@@ -29,7 +29,7 @@ exports.register = (req, res) => {
       "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
 
     db.query(insertQuery, [name, email, hashedPassword], (err, data) => {
-      if (err) return res.status(500).json(err);
+      if (err) return sendServerError(res, err, "Registration failed");
 
       const newUser = {
         id: data.insertId,
@@ -66,7 +66,7 @@ exports.login = (req, res) => {
   const query = "SELECT * FROM users WHERE email = ?";
 
   db.query(query, [email], async (err, result) => {
-    if (err) return res.status(500).json(err);
+    if (err) return sendServerError(res, err, "Registration failed");
 
     if (result.length === 0) {
       return res.status(400).json({ message: "Invalid credentials" });
@@ -102,16 +102,13 @@ exports.forgotPassword = (req, res) => {
 
   db.query(query, [email], (err, users) => {
     if (err) {
-      return res.status(500).json({
-        success: false,
-        message: "Server error"
-      });
+      return sendServerError(res, err, "Server error");
     }
 
     if (!users.length) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found"
+      return res.json({
+        success: true,
+        message: "If an account exists for this email, a reset link has been sent",
       });
     }
 
@@ -129,10 +126,7 @@ exports.forgotPassword = (req, res) => {
 
     db.query(updateQuery, [resetToken, expiry, user.id], (err) => {
       if (err) {
-        return res.status(500).json({
-          success: false,
-          message: "Failed to generate reset token"
-        });
+        return sendServerError(res, err, "Failed to generate reset token");
       }
 
       sendEmail(
@@ -146,11 +140,10 @@ exports.forgotPassword = (req, res) => {
         `
       );
 
-      // For now: return token (later we email it)
+      // Token is emailed; do not return it in the API response
       res.json({
         success: true,
-        message: "Reset token generated",
-        resetToken
+        message: "If an account exists for this email, a reset link has been sent",
       });
     });
   });
@@ -167,41 +160,38 @@ exports.resetPassword = (req, res) => {
 
   db.query(query, [token], (err, users) => {
     if (err) {
-      return res.status(500).json({
-        success: false,
-        message: "Server error"
-      });
+      return sendServerError(res, err, "Server error");
     }
 
     if (!users.length) {
       return res.status(400).json({
         success: false,
-        message: "Invalid or expired token"
+        message: "Invalid or expired token",
       });
     }
 
     const user = users[0];
 
-    const bcrypt = require("bcryptjs");
-    const hashedPassword = bcrypt.hashSync(newPassword, 10);
-
-    const updateQuery = `
-      UPDATE users
-      SET password = ?, reset_token = NULL, reset_token_expiry = NULL
-      WHERE id = ?
-    `;
-
-    db.query(updateQuery, [hashedPassword, user.id], (err) => {
-      if (err) {
-        return res.status(500).json({
-          success: false,
-          message: "Failed to reset password"
-        });
+    bcrypt.hash(newPassword, 10, (hashErr, hashedPassword) => {
+      if (hashErr) {
+        return sendServerError(res, hashErr, "Failed to reset password");
       }
 
-      res.json({
-        success: true,
-        message: "Password reset successful"
+      const updateQuery = `
+        UPDATE users
+        SET password = ?, reset_token = NULL, reset_token_expiry = NULL
+        WHERE id = ?
+      `;
+
+      db.query(updateQuery, [hashedPassword, user.id], (err) => {
+        if (err) {
+          return sendServerError(res, err, "Failed to reset password");
+        }
+
+        res.json({
+          success: true,
+          message: "Password reset successful",
+        });
       });
     });
   });

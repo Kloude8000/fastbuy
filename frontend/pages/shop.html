@@ -1,75 +1,92 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="api-base-url" content="">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.fontawesome.com; font-src 'self' https://fonts.gstatic.com https://use.fontawesome.com data:; img-src 'self' data: https: http:; connect-src 'self' http://localhost:5000 https://fastbuy-iewu.onrender.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
+    <meta name="description" content="Shop all products at FastBuy">
     <title>Shop | FastBuy</title>
     <link rel="stylesheet" href="../assets/css/base.css">
     <link rel="stylesheet" href="../assets/css/layout.css">
-    <!-- <link rel="stylesheet" href="../assets/css/components.css"> -->
-    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
     <link rel="stylesheet" href="../assets/css/shop.css">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
-    <link rel="icon" type="image/png" href="../assets/images/logo.jpg">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/logo-icon.svg">
 </head>
 <body>
 
     <div id="header"></div>
 
-    <main class="shop-main">
-        <div class="container shop-container">
-            <h1 class="shop-title">Shop All Products</h1>
-
-            <!-- Filters Row (Category & Sale/New) -->
-            <div class="shop-filters">
+    <main class="page-main shop-page">
+        <div class="container shop-layout">
+            <aside class="shop-sidebar" id="shop-sidebar">
+                <div class="shop-sidebar-header">
+                    <h2>Filters</h2>
+                    <button type="button" class="filter-close btn btn-ghost btn-sm" id="filter-close" aria-label="Close filters">&times;</button>
+                </div>
                 <div class="filter-group">
-                    <label>Category:</label>
+                    <h3>Category</h3>
                     <div class="filter-chips" id="category-filters">
-                        <button class="filter-chip is-active" data-category="all">All</button>
+                        <button type="button" class="filter-chip is-active" data-category="all">All</button>
                     </div>
                 </div>
                 <div class="filter-group">
-                    <label>Show:</label>
+                    <h3>Show</h3>
                     <div class="filter-chips" id="tag-filters">
-                        <button class="filter-chip is-active" data-tag="all">All Products</button>
-                        <button class="filter-chip" data-tag="sales">On Sale</button>
-                        <button class="filter-chip" data-tag="new">New Arrivals</button>
+                        <button type="button" class="filter-chip is-active" data-tag="all">All products</button>
+                        <button type="button" class="filter-chip" data-tag="sales">On sale</button>
+                        <button type="button" class="filter-chip" data-tag="new">New arrivals</button>
                     </div>
                 </div>
-            </div>
+            </aside>
+            <div class="filter-overlay" id="filter-overlay"></div>
 
-            <!-- Search & Sort Row -->
-            <div class="shop-toolbar">
-                <div class="search-box">
-                    <input type="text" id="search-input" placeholder="Search products...">
-                    <button id="search-btn"><i class="fas fa-search"></i></button>
+            <div class="shop-main">
+                <header class="shop-header">
+                    <div>
+                        <p class="section-label">Collection</p>
+                        <h1 class="section-title">Shop all products</h1>
+                    </div>
+                    <button type="button" class="btn btn-ghost btn-sm filter-toggle" id="filter-toggle">
+                        <i class="fas fa-sliders-h"></i> Filters
+                    </button>
+                </header>
+
+                <div class="shop-toolbar">
+                    <div class="search-box">
+                        <input type="text" id="search-input" placeholder="Search products..." aria-label="Search products">
+                        <button type="button" id="search-btn" aria-label="Search"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="sort-box">
+                        <label for="sort-select">Sort</label>
+                        <select id="sort-select">
+                            <option value="newest">Newest</option>
+                            <option value="price_asc">Price: Low to High</option>
+                            <option value="price_desc">Price: High to Low</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="sort-box">
-                    <label for="sort-select">Sort by:</label>
-                    <select id="sort-select">
-                        <option value="newest">Newest</option>
-                        <option value="price_asc">Price: Low to High</option>
-                        <option value="price_desc">Price: High to Low</option>
-                    </select>
+
+                <div id="products-grid" class="products-grid">
+                    <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading products...</div>
                 </div>
-            </div>
 
-            <!-- Products Grid -->
-            <div id="products-grid" class="products-grid">
-                <div class="loading-spinner">Loading products...</div>
-            </div>
-
-            <!-- Pagination -->
-            <div id="pagination" class="pagination">
-                <!-- dynamic pagination buttons -->
+                <div id="pagination" class="pagination"></div>
             </div>
         </div>
     </main>
 
-    <!-- <div id="footer"></div> -->
+    <div id="footer"></div>
 
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/toast.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/api.js"></script>
     <script src="../assets/js/hamburger.js"></script>
     <script src="../assets/js/loaderScript.js"></script>
     <script src="../assets/js/shop.js"></script>

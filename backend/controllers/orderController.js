@@ -1,99 +1,6 @@
 const db = require("../config/db");
+const { sendServerError } = require("../middlewares/errorMiddleware");
 
-// CREATE ORDER (CHECKOUT)
-exports.createOrder = (req, res) => {
-  const userId = req.user.id;
-
-  const cartQuery = `
-    SELECT c.product_id, c.quantity, p.price, p.stock
-    FROM cart c
-    JOIN products p ON c.product_id = p.id
-    WHERE c.user_id = ?
-  `;
-
-  db.query(cartQuery, [userId], (err, cartItems) => {
-    if (err) return res.status(500).json(err);
-
-    if (cartItems.length === 0) {
-      return res.status(400).json({
-        message: "Cart is empty"
-      });
-    }
-
-    // Validate stock
-    for (let item of cartItems) {
-      if (item.quantity > item.stock) {
-        return res.status(400).json({
-          message: `Insufficient stock for product ID ${item.product_id}`
-        });
-      }
-    }
-
-    let total = 0;
-
-    cartItems.forEach(item => {
-      total += item.price * item.quantity;
-    });
-
-    // Create order
-    const orderQuery = `
-      INSERT INTO orders (user_id, total_price)
-      VALUES (?, ?)
-    `;
-
-    db.query(orderQuery, [userId, total], (err, orderResult) => {
-      if (err) return res.status(500).json(err);
-
-      const orderId = orderResult.insertId;
-
-      // Insert order items
-      const orderItemsQuery = `
-        INSERT INTO order_items
-        (order_id, product_id, quantity, price)
-        VALUES ?
-      `;
-
-      const values = cartItems.map(item => [
-        orderId,
-        item.product_id,
-        item.quantity,
-        item.price
-      ]);
-
-      db.query(orderItemsQuery, [values], (err2) => {
-        if (err2) return res.status(500).json(err2);
-
-        // Update stock
-        cartItems.forEach(item => {
-          const stockQuery = `
-            UPDATE products
-            SET stock = stock - ?
-            WHERE id = ?
-          `;
-
-          db.query(stockQuery, [
-            item.quantity,
-            item.product_id
-          ]);
-        });
-
-        // Clear cart
-        const clearCartQuery =
-          "DELETE FROM cart WHERE user_id = ?";
-
-        db.query(clearCartQuery, [userId]);
-
-        res.status(201).json({
-          message: "Order placed successfully",
-          orderId,
-          total
-        });
-      });
-    });
-  });
-};
-
-// GET USER ORDERS
 exports.getUserOrders = (req, res) => {
   const userId = req.user.id;
 
@@ -109,26 +16,28 @@ exports.getUserOrders = (req, res) => {
   `;
 
   db.query(query, [userId], (err, results) => {
-    if (err) return res.status(500).json(err);
-
+    if (err) return sendServerError(res, err, "Failed to fetch orders");
     res.json(results);
   });
 };
 
-// GET ORDER DETAILS
 exports.getOrderDetails = (req, res) => {
   const orderId = req.params.id;
+  const userId = req.user.id;
+  const isAdmin = req.user.role === "admin";
 
-  const orderQuery = `
-    SELECT * FROM orders WHERE id = ?
-  `;
+  const orderQuery = isAdmin
+    ? `SELECT * FROM orders WHERE id = ?`
+    : `SELECT * FROM orders WHERE id = ? AND user_id = ?`;
 
-  db.query(orderQuery, [orderId], (err, orderResult) => {
-    if (err) return res.status(500).json(err);
+  const orderParams = isAdmin ? [orderId] : [orderId, userId];
+
+  db.query(orderQuery, orderParams, (err, orderResult) => {
+    if (err) return sendServerError(res, err, "Failed to fetch order");
 
     if (orderResult.length === 0) {
       return res.status(404).json({
-        message: "Order not found"
+        message: "Order not found",
       });
     }
 
@@ -140,16 +49,15 @@ exports.getOrderDetails = (req, res) => {
     `;
 
     db.query(itemsQuery, [orderId], (err2, items) => {
-      if (err2) return res.status(500).json(err2);
+      if (err2) return sendServerError(res, err2, "Failed to fetch order items");
 
       res.json({
         order: orderResult[0],
-        items
+        items,
       });
     });
   });
 };
-
 
 exports.getAllOrders = (req, res) => {
   const query = `
@@ -163,12 +71,10 @@ exports.getAllOrders = (req, res) => {
   `;
 
   db.query(query, (err, results) => {
-    if (err) return res.status(500).json(err);
-
+    if (err) return sendServerError(res, err, "Failed to fetch orders");
     res.json(results);
   });
 };
-
 
 exports.updateOrderStatus = (req, res) => {
   const orderId = req.params.id;
@@ -179,30 +85,142 @@ exports.updateOrderStatus = (req, res) => {
     "processing",
     "shipped",
     "delivered",
-    "cancelled"
+    "cancelled",
   ];
 
   if (!validStatuses.includes(status)) {
     return res.status(400).json({
-      message: "Invalid status"
+      message: "Invalid status",
     });
   }
 
-  const query = `
-    UPDATE orders
-    SET status = ?
-    WHERE id = ?
-  `;
+  db.getConnection((connErr, connection) => {
+    if (connErr) {
+      return sendServerError(res, connErr, "Failed to acquire database connection");
+    }
 
-  db.query(query, [status, orderId], (err) => {
-    if (err) return res.status(500).json(err);
+    connection.beginTransaction((err) => {
+      if (err) {
+        connection.release();
+        return sendServerError(res, err, "Failed to start transaction");
+      }
 
-    res.json({
-      message: "Order status updated successfully"
+      connection.query(
+        `SELECT id, status FROM orders WHERE id = ? FOR UPDATE`,
+        [orderId],
+        (err, orders) => {
+          if (err) {
+            return connection.rollback(() => {
+              connection.release();
+              sendServerError(res, err, "Failed to fetch order");
+            });
+          }
+
+          if (!orders.length) {
+            return connection.rollback(() => {
+              connection.release();
+              res.status(404).json({ message: "Order not found" });
+            });
+          }
+
+          const currentStatus = orders[0].status;
+          const isCancelling =
+            status === "cancelled" && currentStatus !== "cancelled";
+          const isUncancelling =
+            currentStatus === "cancelled" && status !== "cancelled";
+
+          const updateOrder = () => {
+            connection.query(
+              `UPDATE orders SET status = ? WHERE id = ?`,
+              [status, orderId],
+              (err) => {
+                if (err) {
+                  return connection.rollback(() => {
+                    connection.release();
+                    sendServerError(res, err, "Failed to update order status");
+                  });
+                }
+
+                connection.commit((err) => {
+                  if (err) {
+                    return connection.rollback(() => {
+                      connection.release();
+                      sendServerError(res, err, "Commit failed");
+                    });
+                  }
+
+                  connection.release();
+                  res.json({
+                    message: "Order status updated successfully",
+                  });
+                });
+              }
+            );
+          };
+
+          if (!isCancelling && !isUncancelling) {
+            return updateOrder();
+          }
+
+          const itemsQuery = `
+            SELECT product_id, quantity
+            FROM order_items
+            WHERE order_id = ?
+          `;
+
+          connection.query(itemsQuery, [orderId], (err, items) => {
+            if (err) {
+              return connection.rollback(() => {
+                connection.release();
+                sendServerError(res, err, "Failed to fetch order items");
+              });
+            }
+
+            let i = 0;
+
+            const adjustStock = () => {
+              if (i >= items.length) {
+                return updateOrder();
+              }
+
+              const item = items[i];
+              const stockSql = isCancelling
+                ? `UPDATE products SET stock = stock + ? WHERE id = ?`
+                : `UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?`;
+
+              const stockParams = isCancelling
+                ? [item.quantity, item.product_id]
+                : [item.quantity, item.product_id, item.quantity];
+
+              connection.query(stockSql, stockParams, (err, result) => {
+                if (err) {
+                  return connection.rollback(() => {
+                    connection.release();
+                    sendServerError(res, err, "Stock adjustment failed");
+                  });
+                }
+
+                if (!isCancelling && result.affectedRows !== 1) {
+                  return connection.rollback(() => {
+                    connection.release();
+                    res.status(400).json({
+                      message: `Insufficient stock to reactivate order for product ${item.product_id}`,
+                    });
+                  });
+                }
+
+                i++;
+                adjustStock();
+              });
+            };
+
+            adjustStock();
+          });
+        }
+      );
     });
   });
 };
-
 
 exports.filterOrdersByStatus = (req, res) => {
   const { status } = req.query;
@@ -214,8 +232,7 @@ exports.filterOrdersByStatus = (req, res) => {
   `;
 
   db.query(query, [status], (err, results) => {
-    if (err) return res.status(500).json(err);
-
+    if (err) return sendServerError(res, err, "Failed to filter orders");
     res.json(results);
   });
 };

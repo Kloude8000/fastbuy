@@ -3,90 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--SEO Meta Tags-->
-    <meta name="description" content="FastBuy | Modern Online Shopping Platform">
-    <meta name="keywords" content="FastBuy, online shopping, modern shopping, fastbuy shopping">
-    <meta name="author" content="fastbuy">
-    <!--Open Graph Meta Tags for Social Media Sharing-->
-    <meta property="og:title" content="FastBuy - Modern Online Shopping Platform">
-    <meta property="og:description" content="FastBuy is your modern online shopping destination to find the latest products at competitive prices. Shop fashion, electronics, home goods, and more anytime on FastBuy.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://fastbuy.com">
-    <meta property="og:image" content="assets/images/fastbuy-og-image.jpg">
-    <meta property="og:site_name" content="FastBuy">
-    <meta property="og:locale" content="en_US">
-    <title>FastBuy – Login</title>
+    <meta name="api-base-url" content="">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.fontawesome.com; font-src 'self' https://fonts.gstatic.com https://use.fontawesome.com data:; img-src 'self' data: https: http:; connect-src 'self' http://localhost:5000 https://fastbuy-iewu.onrender.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
+    <meta name="description" content="Sign in to FastBuy">
+    <title>Sign in | FastBuy</title>
     <link rel="stylesheet" href="../assets/css/base.css">
-    <link rel="stylesheet" href="../assets/css/layout.css">
-    <!-- <link rel="stylesheet" href="../assets/css/home.css"> -->
-    <!-- <link rel="stylesheet" href="../assets/css/components.css"> -->
+    <link rel="stylesheet" href="../assets/css/components.css">
     <link rel="stylesheet" href="../assets/css/responsive.css">
-    <link rel="stylesheet" href="../assets/css/login.css">
-    <!--Google Font-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=BBH+Bogle&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <!--Font Awesome-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
-    <!--favicon-->
-    <link rel="icon" type="image/png" href="../assets/images/logo.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/logo-icon.svg">
 </head>
-<body>
+<body class="auth-page-body">
 
-    <!--HEADER LOADS HERE-->
-    <!-- <div id="header"></div> -->
+    <div class="auth-page">
+        <aside class="auth-brand">
+            <a href="/index.html" class="auth-brand-logo">
+                <img src="/assets/images/brand-logo.svg" alt="FastBuy">
+            </a>
+            <h1>Welcome back</h1>
+            <p>Sign in to track orders, manage your profile, and checkout faster.</p>
+        </aside>
 
-    <div class="login-container">
-        <div class="login-card">
-            <h2>Welcome Back</h2>
-            <p class="subtitle">Sign in to your FastBuy account</p>
-            
-            <form id="loginForm" novalidate>
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email" 
-                        placeholder="you@example.com"
-                        autocomplete="email"
-                    >
-                    <small class="error-message" id="emailError"></small>
+        <div class="auth-panel">
+            <div class="auth-card">
+                <h2>Sign in</h2>
+                <p class="subtitle">Enter your account details</p>
+
+                <form id="loginForm" novalidate>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email">
+                        <small class="error-message" id="emailError"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Your password" autocomplete="current-password">
+                        <small class="error-message" id="passwordError"></small>
+                    </div>
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" id="rememberMe"> Remember me
+                        </label>
+                    </div>
+                    <button type="submit" id="submitBtn" class="btn btn-primary btn-block">Sign in</button>
+                </form>
+
+                <div id="messageContainer"></div>
+                <div class="register-link">
+                    Don't have an account? <a href="/pages/register.html">Create one</a>
                 </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
-                        placeholder="Enter your password"
-                        autocomplete="current-password"
-                    >
-                    <small class="error-message" id="passwordError"></small>
-                </div>
-
-                <div class="form-options">
-                    <label class="remember-me">
-                        <input type="checkbox" id="rememberMe"> Remember me
-                    </label>
-                    <a href="forgot-password.html" class="forgot-link">Forgot Password?</a>
-                </div>
-
-                <button type="submit" id="submitBtn" class="login-btn">
-                    Sign In
-                </button>
-            </form>
-
-            <div id="messageContainer"></div>
-            
-            <div class="register-link">
-                Don't have an account? <a href="register.html">Create one</a>
             </div>
         </div>
     </div>
 
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/toast.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/api.js"></script>
     <script src="../assets/js/login.js"></script>
-    <script src="../assets/js/loaderScript.js"></script>
 </body>
 </html>

@@ -3,70 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="api-base-url" content="">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.fontawesome.com; font-src 'self' https://fonts.gstatic.com https://use.fontawesome.com data:; img-src 'self' data: https: http:; connect-src 'self' http://localhost:5000 https://fastbuy-iewu.onrender.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
     <meta name="description" content="Your profile - FastBuy">
     <title>My Profile | FastBuy</title>
     <link rel="stylesheet" href="../assets/css/base.css">
     <link rel="stylesheet" href="../assets/css/layout.css">
-    <!-- <link rel="stylesheet" href="../assets/css/components.css"> -->
-    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
     <link rel="stylesheet" href="../assets/css/profile.css">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
-    <link rel="icon" type="image/png" href="../assets/images/logo.jpg">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/logo-icon.svg">
 </head>
 <body>
 
     <div id="header"></div>
 
-    <main class="profile-main">
-        <div class="container profile-container">
-            <h1 class="profile-title">My Profile</h1>
+    <main class="page-main">
+        <div class="container">
+            <p class="section-label">Account</p>
+            <h1 class="section-title">My profile</h1>
 
-            <div class="profile-grid">
-                <!-- Profile Information Section -->
-                <div class="profile-card">
-                    <h2>Personal Information</h2>
-                    <form id="profile-form">
-                        <div class="form-group">
-                            <label for="name">Full Name</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        <button type="submit" id="update-profile-btn" class="btn btn-primary">Update Profile</button>
-                        <div id="profile-message" class="form-message"></div>
-                    </form>
-                </div>
+            <div class="account-shell">
+                <nav class="account-nav" aria-label="Account navigation">
+                    <a href="/pages/profile.html" class="is-active">Profile</a>
+                    <a href="/pages/orders.html">Orders</a>
+                </nav>
 
-                <!-- Change Password Section -->
-                <div class="profile-card">
-                    <h2>Change Password</h2>
-                    <form id="password-form">
-                        <div class="form-group">
-                            <label for="current-password">Current Password</label>
-                            <input type="password" id="current-password" name="currentPassword" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="new-password">New Password</label>
-                            <input type="password" id="new-password" name="newPassword" required>
-                            <small>Minimum 6 characters</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="confirm-password">Confirm New Password</label>
-                            <input type="password" id="confirm-password" name="confirmPassword" required>
-                        </div>
-                        <button type="submit" id="change-password-btn" class="btn btn-secondary">Change Password</button>
-                        <div id="password-message" class="form-message"></div>
-                    </form>
+                <div class="profile-grid">
+                    <div class="surface-card">
+                        <h2>Personal information</h2>
+                        <form id="profile-form">
+                            <div class="form-group">
+                                <label for="name">Full name</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <button type="submit" id="update-profile-btn" class="btn btn-primary">Update profile</button>
+                            <div id="profile-message" class="form-message"></div>
+                        </form>
+                    </div>
+
+                    <div class="surface-card">
+                        <h2>Change password</h2>
+                        <form id="password-form">
+                            <div class="form-group">
+                                <label for="current-password">Current password</label>
+                                <input type="password" id="current-password" name="currentPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="new-password">New password</label>
+                                <input type="password" id="new-password" name="newPassword" required>
+                                <small>Minimum 6 characters</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm-password">Confirm new password</label>
+                                <input type="password" id="confirm-password" name="confirmPassword" required>
+                            </div>
+                            <button type="submit" id="change-password-btn" class="btn btn-secondary">Change password</button>
+                            <div id="password-message" class="form-message"></div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- <div id="footer"></div> -->
+    <div id="footer"></div>
 
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/toast.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/api.js"></script>
     <script src="../assets/js/hamburger.js"></script>
     <script src="../assets/js/loaderScript.js"></script>
     <script src="../assets/js/profile.js"></script>

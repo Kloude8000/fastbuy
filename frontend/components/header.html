@@ -1,46 +1,41 @@
-<!-- 
-  FASTBUY HEADER - MODIFIED FOR AUTH INTEGRATION
-  Changes:
-  - Added id="loginListItem" to the Sign in list item
-  - Added hidden list item id="userListItem" for logged-in user display
-  - Added id="cartIconLink" to the cart icon anchor
--->
-<header>
-    <div class="header-container">
+<header class="site-header">
+    <div class="header-container container">
         <div class="logo">
-            <a href="#"><img src="/assets/images/logo.webp" alt="FastBuy Logo"></a>
-            <span class="brand-name">FastBuy</span>
-        </div>
-        <nav class="header-nav">
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/pages/shop.html">Shop</a></li>
-                <li><a href="#">About Us</a></li>
-                <li><a href="#">Contact</a></li>
-                <!-- Sign in link (visible when logged out) -->
-                <li id="loginListItem"><a href="/pages/login.html" id="loginLink">Sign in</a></li>
-                <!-- Logged-in user display (hidden by default) -->
-                <li id="userListItem" style="display: none;">
-                    <span id="userDisplayName"></span>
-                    <a href="/pages/profile.html" style="margin-left: 10px;">Profile</a>
-                    <a href="/pages/admin.html" id="adminLink" style="margin-left: 10px; display: none;">Admin</a>
-                    <a href="#" id="logoutLink" style="margin-left: 10px;">Logout</a>
-                </li>
-            </ul>
-        </nav>
-        <div class="search-cart">
-            <!-- <input type="text" placeholder="Search products...">
-            <button><i class="fas fa-search"></i></button> -->
-            <a href="/pages/cart.html" id="cartIconLink">
-                <i class="fas fa-shopping-cart"></i>
-                <!-- <span id="cart-count" class="cart-count">0</span> -->
+            <a href="/index.html" aria-label="FastBuy home">
+                <img src="/assets/images/brand-logo-header.svg" alt="FastBuy" class="brand-logo-img">
             </a>
         </div>
-        <button
-            class="hamburger"
-            aria-label="Toggle menu"
-            aria-expanded="false"
-            onclick="toggleMenu(this)">
+
+        <nav class="header-nav" aria-label="Main navigation">
+            <ul class="nav-primary">
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/pages/shop.html">Shop</a></li>
+                <li><a href="/pages/about.html">About</a></li>
+                <li><a href="/pages/contact.html">Contact</a></li>
+            </ul>
+        </nav>
+
+        <div class="header-actions">
+            <a href="/pages/shop.html" class="header-action-btn" aria-label="Search products" title="Search">
+                <i class="fas fa-search"></i>
+            </a>
+            <a href="/pages/cart.html" id="cartIconLink" class="header-action-btn" aria-label="Cart">
+                <i class="fas fa-shopping-bag"></i>
+                <span id="cart-count" class="cart-count" hidden>0</span>
+            </a>
+            <div class="header-auth">
+                <a href="/pages/login.html" id="loginListItem" class="btn btn-ghost btn-sm">Sign in</a>
+                <div id="userListItem" class="nav-user">
+                    <span id="userDisplayName" class="nav-user-name"></span>
+                    <a href="/pages/profile.html" class="nav-auth-link">Profile</a>
+                    <a href="/pages/orders.html" class="nav-auth-link">Orders</a>
+                    <a href="/pages/admin.html" id="adminLink" class="nav-auth-link is-hidden">Admin</a>
+                    <a href="#" id="logoutLink" class="nav-auth-link">Logout</a>
+                </div>
+            </div>
+        </div>
+
+        <button class="hamburger" aria-label="Toggle menu" aria-expanded="false" onclick="toggleMenu(this)">
             <span class="line"></span>
             <span class="line"></span>
             <span class="line"></span>

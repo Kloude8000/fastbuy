@@ -1,4 +1,5 @@
 const db = require("../config/db");
+const { sendServerError } = require("../middlewares/errorMiddleware");
 
 /* =========================
    CREATE PRODUCT (ADMIN)
@@ -35,7 +36,7 @@ exports.createProduct = (req, res) => {
       featured ? true : false
     ],
     (err, result) => {
-      if (err) return res.status(500).json(err);
+      if (err) return sendServerError(res, err, "Failed to create product");
 
       res.status(201).json({
         message: "Product created successfully",
@@ -57,7 +58,7 @@ exports.getProducts = (req, res) => {
   `;
 
   db.query(query, (err, result) => {
-    if (err) return res.status(500).json(err);
+    if (err) return sendServerError(res, err, "Failed to fetch products");
     res.json(result);
   });
 };
@@ -77,7 +78,7 @@ exports.getProductById = (req, res) => {
   `;
 
   db.query(productQuery, [productId], (err, productResult) => {
-    if (err) return res.status(500).json(err);
+    if (err) return sendServerError(res, err, "Failed to fetch product");
 
     if (productResult.length === 0) {
       return res.status(404).json({
@@ -96,7 +97,7 @@ exports.getProductById = (req, res) => {
     `;
 
     db.query(reviewsQuery, [productId], (reviewErr, reviews) => {
-      if (reviewErr) return res.status(500).json(reviewErr);
+      if (reviewErr) return sendServerError(res, reviewErr, "Failed to fetch product reviews");
 
       const ratingQuery = `
         SELECT 
@@ -107,7 +108,7 @@ exports.getProductById = (req, res) => {
       `;
 
       db.query(ratingQuery, [productId], (ratingErr, ratingResult) => {
-        if (ratingErr) return res.status(500).json(ratingErr);
+        if (ratingErr) return sendServerError(res, ratingErr, "Failed to fetch product ratings");
 
         const relatedQuery = `
           SELECT *
@@ -121,7 +122,7 @@ exports.getProductById = (req, res) => {
           relatedQuery,
           [product.category_id, product.id],
           (relatedErr, relatedProducts) => {
-            if (relatedErr) return res.status(500).json(relatedErr);
+            if (relatedErr) return sendServerError(res, relatedErr, "Failed to fetch related products");
 
             res.json({
               product,
@@ -155,7 +156,7 @@ exports.updateProduct = (req, res) => {
     query,
     [name, description, price, old_price || null, stock, category_id, req.params.id],
     (err) => {
-      if (err) return res.status(500).json(err);
+      if (err) return sendServerError(res, err, "Failed to update product");
 
       res.json({
         message: "Product updated successfully"
@@ -171,7 +172,7 @@ exports.deleteProduct = (req, res) => {
   const query = `DELETE FROM products WHERE id = ?`;
 
   db.query(query, [req.params.id], (err) => {
-    if (err) return res.status(500).json(err);
+    if (err) return sendServerError(res, err, "Failed to delete product");
 
     res.json({
       message: "Product deleted successfully"
@@ -273,10 +274,10 @@ exports.listProducts = (req, res) => {
   const queryValues = [...values, limit, offset];
 
   db.query(countQuery, values, (countErr, countResult) => {
-    if (countErr) return res.status(500).json(countErr);
+    if (countErr) return sendServerError(res, countErr, "Failed to list products");
 
     db.query(query, queryValues, (err, products) => {
-      if (err) return res.status(500).json(err);
+      if (err) return sendServerError(res, err, "Failed to list products");
 
       const totalProducts = countResult[0].total;
 
@@ -304,7 +305,7 @@ exports.getFeaturedProducts = (req, res) => {
   `;
 
   db.query(query, (err, results) => {
-    if (err) return res.status(500).json(err);
+    if (err) return sendServerError(res, err, "Failed to fetch featured products");
     res.json(results);
   });
 };

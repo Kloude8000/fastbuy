@@ -1,1 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="api-base-url" content="">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.fontawesome.com; font-src 'self' https://fonts.gstatic.com https://use.fontawesome.com data:; img-src 'self' data: https: http:; connect-src 'self' http://localhost:5000 https://fastbuy-iewu.onrender.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
+    <meta name="description" content="Contact FastBuy">
+    <title>Contact | FastBuy</title>
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/layout.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/logo-icon.svg">
+</head>
+<body>
 
+    <div id="header"></div>
+
+    <main class="page-main">
+        <div class="container page-container">
+            <p class="section-label">Get in touch</p>
+            <h1 class="section-title">Contact us</h1>
+            <p class="page-lede">
+                Have a question about an order, product, or your account? Send us a message
+                and we will get back to you as soon as possible.
+            </p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3><i class="fas fa-envelope" aria-hidden="true"></i> Email</h3>
+                    <p><a href="mailto:fastbuy@example.com">fastbuy@example.com</a></p>
+                </div>
+                <div class="info-card">
+                    <h3><i class="fas fa-phone" aria-hidden="true"></i> Phone</h3>
+                    <p><a href="tel:+18005550199">233-000-000-0000</a></p>
+                </div>
+                <div class="info-card">
+                    <h3><i class="fas fa-clock" aria-hidden="true"></i> Hours</h3>
+                    <p>Mon–Fri, 9am–6pm GMT</p>
+                </div>
+            </div>
+
+            <section class="content-section contact-section">
+                <h2>Send a message</h2>
+                <form id="contactForm" class="auth-card contact-form" novalidate>
+                    <div class="form-group">
+                        <label for="contactName">Name</label>
+                        <input type="text" id="contactName" name="name" autocomplete="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">Email</label>
+                        <input type="email" id="contactEmail" name="email" autocomplete="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactMessage">Message</label>
+                        <textarea id="contactMessage" name="message" rows="5" required placeholder="How can we help?"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Send message</button>
+                    <div id="contactMessageBox"></div>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/toast.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/hamburger.js"></script>
+    <script src="../assets/js/loaderScript.js"></script>
+    <script src="../assets/js/contact.js"></script>
+</body>
+</html>

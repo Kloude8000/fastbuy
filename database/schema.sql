@@ -21,7 +21,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-USE railway;
+USE fastbuy_db;
 
 --
 -- Table structure for table `cart`
@@ -38,6 +38,7 @@ CREATE TABLE `cart` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `product_id` (`product_id`),
+  UNIQUE KEY `unique_user_product` (`user_id`,`product_id`),
   CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -236,7 +237,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'John Doe','john@example.com','$2b$10$AqyzJKzVbXPJ/2KifYTnNu.IMl1rVImmjdkwOU1Sy4wMgdmFN/MfS','customer','2026-05-31 11:16:31',NULL,NULL),(2,'Admin User','admin@example.com','$2b$10$6JY3f5OGdX20f..KduLXz.iFCTcEb62ptToXbK7HB8cSxQ45bgX42','admin','2026-05-31 14:01:44',NULL,NULL),(3,'Admin User','example.com','123456','admin','2026-05-31 14:12:34',NULL,NULL),(4,'Jane Doe','Jane@example.com','$2b$10$ZI6kRoiY1xi72J4TtxTFFOVN1blUYyF0CTsccsvqJL5a1El19myHK','customer','2026-06-01 12:58:39',NULL,NULL),(5,'Neil Kane','Neil@example.com','$2b$10$sMTUn9tKcFeOxNikz0xgW.LzHeLurObkRh9H0xWDFHXeGYEIO28O6','customer','2026-06-01 13:15:58',NULL,NULL),(6,'Jo Doe','jo@example.com','$2b$10$ISiuV9A5jIklE4wZwk32IeTmhCR4.KEeRqay2Wry3f9UChNNeaW6S','customer','2026-06-01 13:31:41',NULL,NULL),(7,'nick fury','nick@example.com','$2b$10$pmvSMhsYOU8j51HDcnafXeV4iJ.LP1SPbf/9mcyemgRd7c/eAOB2e','customer','2026-06-05 19:07:06',NULL,NULL),(8,'Warner Bros','Warner@example.com','$2b$10$iPsgHFFbaatZ3zfVt6sU5.oc6q0IDACfzMb8gab59ypq56tT/WZ3S','customer','2026-06-06 11:41:25',NULL,NULL);
+INSERT INTO `users` VALUES (1,'John Doe','john@example.com','$2b$10$AqyzJKzVbXPJ/2KifYTnNu.IMl1rVImmjdkwOU1Sy4wMgdmFN/MfS','customer','2026-05-31 11:16:31',NULL,NULL),(2,'Admin User','admin@example.com','$2b$10$6JY3f5OGdX20f..KduLXz.iFCTcEb62ptToXbK7HB8cSxQ45bgX42','admin','2026-05-31 14:01:44',NULL,NULL),(3,'Admin User','example.com','$2b$10$C4psOU3gz34f4e4msX61N..ZmBmRfeS1cBDzTqwa7t69f6sI2aahS','admin','2026-05-31 14:12:34',NULL,NULL),(4,'Jane Doe','Jane@example.com','$2b$10$ZI6kRoiY1xi72J4TtxTFFOVN1blUYyF0CTsccsvqJL5a1El19myHK','customer','2026-06-01 12:58:39',NULL,NULL),(5,'Neil Kane','Neil@example.com','$2b$10$sMTUn9tKcFeOxNikz0xgW.LzHeLurObkRh9H0xWDFHXeGYEIO28O6','customer','2026-06-01 13:15:58',NULL,NULL),(6,'Jo Doe','jo@example.com','$2b$10$ISiuV9A5jIklE4wZwk32IeTmhCR4.KEeRqay2Wry3f9UChNNeaW6S','customer','2026-06-01 13:31:41',NULL,NULL),(7,'nick fury','nick@example.com','$2b$10$pmvSMhsYOU8j51HDcnafXeV4iJ.LP1SPbf/9mcyemgRd7c/eAOB2e','customer','2026-06-05 19:07:06',NULL,NULL),(8,'Warner Bros','Warner@example.com','$2b$10$iPsgHFFbaatZ3zfVt6sU5.oc6q0IDACfzMb8gab59ypq56tT/WZ3S','customer','2026-06-06 11:41:25',NULL,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;

@@ -1,11 +1,14 @@
 function toggleMenu(btn) {
-  const isOpen = document.body.classList.toggle('nav-open');
-  btn.setAttribute('aria-expanded', isOpen);
-  document.querySelector('nav').setAttribute('aria-hidden', !isOpen);
+  const nav = document.querySelector(".header-nav");
+  const isOpen = document.body.classList.toggle("nav-open");
+  btn.setAttribute("aria-expanded", isOpen);
+  if (nav) nav.setAttribute("aria-hidden", !isOpen);
 }
 
 function closeMenu() {
-  document.body.classList.remove('nav-open');
-  document.querySelector('.hamburger').setAttribute('aria-expanded', 'false');
-  document.querySelector('nav').setAttribute('aria-hidden', 'true');
+  const nav = document.querySelector(".header-nav");
+  const hamburger = document.querySelector(".hamburger");
+  document.body.classList.remove("nav-open");
+  if (hamburger) hamburger.setAttribute("aria-expanded", "false");
+  if (nav) nav.setAttribute("aria-hidden", "true");
 }

@@ -1,86 +1,7 @@
 // ============================================
-// ADMIN DASHBOARD (with Header Auth)
+// ADMIN DASHBOARD
 // ============================================
 
-const API_BASE_URL = 'https://fastbuy-iewu.onrender.com';
-
-// ---------- Auth Helpers ----------
-function getAuthToken() {
-    return localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-}
-
-function authHeaders() {
-    const token = getAuthToken();
-    return {
-        'Content-Type': 'application/json',
-        'Authorization': token ? `Bearer ${token}` : ''
-    };
-}
-
-function clearAuth() {
-    localStorage.removeItem('authToken');
-    sessionStorage.removeItem('authToken');
-    localStorage.removeItem('user');
-    sessionStorage.removeItem('user');
-}
-
-// ---------- Header Authentication (same as home.js) ----------
-async function updateHeaderAuth() {
-    const loginListItem = document.getElementById('loginListItem');
-    const userListItem = document.getElementById('userListItem');
-    const userDisplayName = document.getElementById('userDisplayName');
-    const logoutLink = document.getElementById('logoutLink');
-    const cartIcon = document.getElementById('cartIconLink');
-    const adminLink = document.getElementById('adminLink');
-
-    const token = getAuthToken();
-    if (!token) {
-        if (loginListItem) loginListItem.style.display = '';
-        if (userListItem) userListItem.style.display = 'none';
-        if (cartIcon) cartIcon.href = 'login.html';
-        if (adminLink) adminLink.style.display = 'none';
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/profile`, {
-            headers: authHeaders()
-        });
-        if (response.ok) {
-            const user = await response.json();
-            if (userDisplayName) userDisplayName.textContent = `Hi, ${user.name}`;
-            if (loginListItem) loginListItem.style.display = 'none';
-            if (userListItem) userListItem.style.display = '';
-            if (cartIcon) cartIcon.href = 'cart.html';
-
-            // Show admin link only if user is admin
-            if (adminLink) {
-                adminLink.style.display = (user.role === 'admin') ? 'inline' : 'none';
-            }
-
-            if (logoutLink) {
-                logoutLink.onclick = (e) => {
-                    e.preventDefault();
-                    clearAuth();
-                    window.location.reload();
-                };
-            }
-        } else {
-            clearAuth();
-            if (loginListItem) loginListItem.style.display = '';
-            if (userListItem) userListItem.style.display = 'none';
-            if (cartIcon) cartIcon.href = 'login.html';
-            if (adminLink) adminLink.style.display = 'none';
-        }
-    } catch (err) {
-        console.error('Failed to fetch user profile', err);
-        if (loginListItem) loginListItem.style.display = '';
-        if (userListItem) userListItem.style.display = 'none';
-        if (adminLink) adminLink.style.display = 'none';
-    }
-}
-
-// ---------- Admin Access Check ----------
 async function checkAdmin() {
     const token = getAuthToken();
     if (!token) {
@@ -88,18 +9,18 @@ async function checkAdmin() {
         return false;
     }
     try {
-        const response = await fetch(`${API_BASE_URL}/api/profile`, { headers: authHeaders() });
+        const response = await apiFetch(`${API_BASE_URL}/api/profile`, { headers: authHeaders() });
         if (!response.ok) throw new Error('Profile fetch failed');
         const user = await response.json();
         if (user.role !== 'admin') {
-            alert('Admin access only. You are logged in as: ' + (user.role || 'customer'));
+            showToast('Admin access only. You are logged in as: ' + (user.role || 'customer'), 'error');
             window.location.href = '/index.html';
             return false;
         }
         return true;
     } catch (err) {
         console.error('Admin check error:', err);
-        alert('Authentication error. Please log in again.');
+        showToast('Authentication error. Please log in again.', 'error');
         clearAuth();
         window.location.href = '/pages/login.html';
         return false;
@@ -130,7 +51,7 @@ async function loadOrders() {
     const container = document.getElementById('orders-table-container');
     container.innerHTML = '<p>Loading orders...</p>';
     try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/orders/all`, { headers: authHeaders() });
+        const response = await apiFetch(`${API_BASE_URL}/api/admin/orders/all`, { headers: authHeaders() });
         if (!response.ok) throw new Error();
         const orders = await response.json();
         if (!orders.length) {
@@ -168,27 +89,28 @@ async function loadOrders() {
 function openOrderStatusModal(orderId, currentStatus) {
     document.getElementById('order-id').value = orderId;
     document.getElementById('order-status').value = currentStatus;
-    document.getElementById('order-status-modal').style.display = 'block';
+    const modal = document.getElementById('order-status-modal');
+    modal.style.display = 'flex';
 }
 
 async function updateOrderStatus() {
     const orderId = document.getElementById('order-id').value;
     const status = document.getElementById('order-status').value;
     try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/orders/${orderId}/status`, {
+        const response = await apiFetch(`${API_BASE_URL}/api/admin/orders/${orderId}/status`, {
             method: 'PUT',
             headers: authHeaders(),
             body: JSON.stringify({ status })
         });
         if (response.ok) {
-            alert('Order status updated');
+            showToast('Order status updated', 'success');
             closeModals();
             loadOrders();
         } else {
-            alert('Update failed');
+            showToast('Update failed', 'error');
         }
     } catch (err) {
-        alert('Network error');
+        if (!(err instanceof ApiError)) showToast('Network error', 'error');
     }
 }
 
@@ -197,7 +119,7 @@ async function loadProducts() {
     const container = document.getElementById('products-table-container');
     container.innerHTML = '<p>Loading products...</p>';
     try {
-        const response = await fetch(`${API_BASE_URL}/api/products`);
+        const response = await apiFetch(`${API_BASE_URL}/api/products`);
         if (!response.ok) throw new Error();
         const products = await response.json();
         if (!products.length) {
@@ -214,7 +136,7 @@ async function loadProducts() {
                     ${products.map(p => `
                         <tr>
                             <td>${p.id}</td>
-                            <td><img src="${p.image ? API_BASE_URL+'/uploads/'+p.image : 'https://via.placeholder.com/40'}" width="40" height="40" style="object-fit:cover;"></td>
+                            <td><img src="${uploadUrl(p.image)}" width="40" height="40" style="object-fit:cover;"></td>
                             <td>${escapeHtml(p.name)}</td>
                             <td>$${parseFloat(p.price).toFixed(2)}</td>
                             <td>${p.stock}</td>
@@ -241,7 +163,7 @@ function openProductModal(productId = null) {
     document.getElementById('product-id').value = '';
     if (productId) {
         title.innerText = 'Edit Product';
-        fetch(`${API_BASE_URL}/api/products/${productId}`)
+        apiFetch(`${API_BASE_URL}/api/products/${productId}`, { redirectOn401: false })
             .then(res => res.json())
             .then(data => {
                 const p = data.product;
@@ -258,12 +180,12 @@ function openProductModal(productId = null) {
         title.innerText = 'Add Product';
         loadCategorySelect();
     }
-    modal.style.display = 'block';
+    modal.style.display = 'flex';
 }
 
 async function loadCategorySelect(selectedId = null) {
     const select = document.getElementById('product-category-id');
-    const response = await fetch(`${API_BASE_URL}/api/categories`);
+    const response = await apiFetch(`${API_BASE_URL}/api/categories`);
     const categories = await response.json();
     select.innerHTML = '<option value="">Select Category</option>' + categories.map(c => `<option value="${c.id}" ${selectedId == c.id ? 'selected' : ''}>${escapeHtml(c.name)}</option>`).join('');
 }
@@ -298,21 +220,21 @@ async function saveProduct(event) {
         }
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/products/${productId}`, {
+            const response = await apiFetch(`${API_BASE_URL}/api/products/${productId}`, {
                 method: 'PUT',
                 headers: authHeaders(),
                 body: JSON.stringify(updateData)
             });
             if (response.ok) {
-                alert('Product updated successfully');
+                showToast('Product updated successfully', 'success');
                 closeModals();
                 loadProducts();
             } else {
                 const error = await response.json();
-                alert('Update failed: ' + (error.message || JSON.stringify(error.errors)));
+                showToast('Update failed: ' + (error.message || JSON.stringify(error.errors)), 'error');
             }
         } catch (err) {
-            alert('Network error');
+            if (!(err instanceof ApiError)) showToast('Network error', 'error');
         }
     } else {
         // --- CREATE: send FormData (with image) ---
@@ -330,21 +252,20 @@ async function saveProduct(event) {
         if (imageFile) formData.append('image', imageFile);
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/products`, {
+            const response = await apiFetch(`${API_BASE_URL}/api/products`, {
                 method: 'POST',
-                headers: { 'Authorization': `Bearer ${getAuthToken()}` },
-                body: formData
+                body: formData,
             });
             if (response.ok) {
-                alert('Product created successfully');
+                showToast('Product created successfully', 'success');
                 closeModals();
                 loadProducts();
             } else {
                 const error = await response.json();
-                alert('Creation failed: ' + (error.message || JSON.stringify(error.errors)));
+                showToast('Creation failed: ' + (error.message || JSON.stringify(error.errors)), 'error');
             }
         } catch (err) {
-            alert('Network error');
+            if (!(err instanceof ApiError)) showToast('Network error', 'error');
         }
     }
 }
@@ -352,18 +273,18 @@ async function saveProduct(event) {
 async function deleteProduct(productId) {
     if (!confirm('Delete this product?')) return;
     try {
-        const response = await fetch(`${API_BASE_URL}/api/products/${productId}`, {
+        const response = await apiFetch(`${API_BASE_URL}/api/products/${productId}`, {
             method: 'DELETE',
             headers: authHeaders()
         });
         if (response.ok) {
-            alert('Product deleted');
+            showToast('Product deleted', 'success');
             loadProducts();
         } else {
-            alert('Delete failed');
+            showToast('Delete failed', 'error');
         }
     } catch (err) {
-        alert('Network error');
+        if (!(err instanceof ApiError)) showToast('Network error', 'error');
     }
 }
 
@@ -372,7 +293,7 @@ async function loadCategories() {
     const container = document.getElementById('categories-table-container');
     container.innerHTML = '<p>Loading categories...</p>';
     try {
-        const response = await fetch(`${API_BASE_URL}/api/categories`);
+        const response = await apiFetch(`${API_BASE_URL}/api/categories`);
         if (!response.ok) throw new Error();
         const categories = await response.json();
         if (!categories.length) {
@@ -403,7 +324,7 @@ async function loadCategories() {
 }
 
 function openCategoryModal(id = null, name = '') {
-    document.getElementById('category-modal').style.display = 'block';
+    document.getElementById('category-modal').style.display = 'flex';
     document.getElementById('category-id').value = id || '';
     document.getElementById('category-name').value = name;
     document.getElementById('category-modal-title').innerText = id ? 'Edit Category' : 'Add Category';
@@ -416,40 +337,40 @@ async function saveCategory(event) {
     const url = id ? `${API_BASE_URL}/api/categories/${id}` : `${API_BASE_URL}/api/categories`;
     const method = id ? 'PUT' : 'POST';
     try {
-        const response = await fetch(url, {
+        const response = await apiFetch(url, {
             method,
             headers: authHeaders(),
             body: JSON.stringify({ name })
         });
         if (response.ok) {
-            alert('Category saved');
+            showToast('Category saved', 'success');
             closeModals();
             loadCategories();
             loadCategorySelect();
         } else {
-            alert('Save failed');
+            showToast('Save failed', 'error');
         }
     } catch (err) {
-        alert('Network error');
+        if (!(err instanceof ApiError)) showToast('Network error', 'error');
     }
 }
 
 async function deleteCategory(id) {
     if (!confirm('Delete category? Products in this category will have category_id set to NULL.')) return;
     try {
-        const response = await fetch(`${API_BASE_URL}/api/categories/${id}`, {
+        const response = await apiFetch(`${API_BASE_URL}/api/categories/${id}`, {
             method: 'DELETE',
             headers: authHeaders()
         });
         if (response.ok) {
-            alert('Category deleted');
+            showToast('Category deleted', 'success');
             loadCategories();
             loadCategorySelect();
         } else {
-            alert('Delete failed');
+            showToast('Delete failed', 'error');
         }
     } catch (err) {
-        alert('Network error');
+        if (!(err instanceof ApiError)) showToast('Network error', 'error');
     }
 }
 
@@ -465,7 +386,7 @@ async function loadReports() {
 async function loadRevenueReport() {
     const container = document.getElementById('revenue-summary');
     try {
-        const res = await fetch(`${API_BASE_URL}/api/reports/revenue`, { headers: authHeaders() });
+        const res = await apiFetch(`${API_BASE_URL}/api/reports/revenue`, { headers: authHeaders() });
         const data = await res.json();
         container.innerHTML = `
             <p><strong>Total Orders:</strong> ${data.totalOrders}</p>
@@ -480,7 +401,7 @@ async function loadRevenueReport() {
 async function loadOrderStatusReport() {
     const container = document.getElementById('order-status-report');
     try {
-        const res = await fetch(`${API_BASE_URL}/api/reports/orders`, { headers: authHeaders() });
+        const res = await apiFetch(`${API_BASE_URL}/api/reports/orders`, { headers: authHeaders() });
         const data = await res.json();
         container.innerHTML = `<ul>` + data.map(item => `<li><strong>${item.status}:</strong> ${item.total}</li>`).join('') + `</ul>`;
     } catch (err) {
@@ -491,7 +412,7 @@ async function loadOrderStatusReport() {
 async function loadTopProducts() {
     const container = document.getElementById('top-products');
     try {
-        const res = await fetch(`${API_BASE_URL}/api/reports/products`, { headers: authHeaders() });
+        const res = await apiFetch(`${API_BASE_URL}/api/reports/products`, { headers: authHeaders() });
         const data = await res.json();
         if (!data.length) { container.innerHTML = '<p>No sales data.</p>'; return; }
         container.innerHTML = `<table><thead><tr><th>Product</th><th>Units Sold</th><th>Revenue</th></tr></thead><tbody>` +
@@ -505,7 +426,7 @@ async function loadTopProducts() {
 async function loadTopCustomers() {
     const container = document.getElementById('top-customers');
     try {
-        const res = await fetch(`${API_BASE_URL}/api/reports/customers`, { headers: authHeaders() });
+        const res = await apiFetch(`${API_BASE_URL}/api/reports/customers`, { headers: authHeaders() });
         const data = await res.json();
         if (!data.length) { container.innerHTML = '<p>No customer data.</p>'; return; }
         container.innerHTML = `<table><thead><tr><th>Customer</th><th>Orders</th><th>Total Spent</th></tr></thead><tbody>` +
@@ -519,7 +440,7 @@ async function loadTopCustomers() {
 async function loadInventoryReport() {
     const container = document.getElementById('inventory-report');
     try {
-        const res = await fetch(`${API_BASE_URL}/api/reports/inventory`, { headers: authHeaders() });
+        const res = await apiFetch(`${API_BASE_URL}/api/reports/inventory`, { headers: authHeaders() });
         const data = await res.json();
         if (!data.length) { container.innerHTML = '<p>No inventory data.</p>'; return; }
         container.innerHTML = `<table><thead><tr><th>Product</th><th>Stock</th><th>Price</th></tr></thead><tbody>` +
@@ -535,26 +456,8 @@ function closeModals() {
     document.querySelectorAll('.modal').forEach(modal => modal.style.display = 'none');
 }
 
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-    });
-}
-
 // ---------- Event Listeners ----------
-document.addEventListener('headerLoaded', async () => {
-    await updateHeaderAuth();
-});
-
 document.addEventListener('DOMContentLoaded', async () => {
-    if (document.getElementById('loginListItem')) {
-        await updateHeaderAuth();
-    }
-
     const isAdmin = await checkAdmin();
     if (!isAdmin) return;
 

@@ -1,6 +1,3 @@
-// API Configuration
-const API_BASE_URL = 'https://fastbuy-iewu.onrender.com'; // Change this to your backend URL
-
 // DOM Elements
 const form = document.getElementById('loginForm');
 const submitBtn = document.getElementById('submitBtn');
@@ -44,16 +41,14 @@ form.addEventListener('submit', async (e) => {
     setLoading(true);
     
     try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        const response = await apiFetch(`${API_BASE_URL}/api/auth/login`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
+            redirectOn401: false,
+            headers: { Accept: 'application/json' },
             body: JSON.stringify({
                 email: emailInput.value.trim(),
                 password: passwordInput.value
-            })
+            }),
         });
         
         const data = await response.json();
@@ -66,6 +61,7 @@ form.addEventListener('submit', async (e) => {
             handleErrors(response, data);
         }
     } catch (error) {
+        if (error instanceof ApiError) return;
         console.error('Login error:', error);
         showMessage('Unable to connect to server. Please check your internet connection.', 'error');
     } finally {
@@ -149,10 +145,10 @@ function clearMessages() {
 function setLoading(loading) {
     if (loading) {
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Signing in...';
+        submitBtn.textContent = 'Signing in…';
     } else {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Sign In';
+        submitBtn.textContent = 'Sign in';
     }
 }
 
@@ -160,15 +156,10 @@ function handleSuccess(data) {
     // Store authentication token
     if (data.token) {
         if (rememberMeCheckbox.checked) {
-            // Store for longer (localStorage persists until manually cleared)
             localStorage.setItem('authToken', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
-            // Save email for "remember me" feature
             localStorage.setItem('savedEmail', emailInput.value.trim());
         } else {
-            // Use sessionStorage (clears when tab closes)
             sessionStorage.setItem('authToken', data.token);
-            sessionStorage.setItem('user', JSON.stringify(data.user));
         }
     }
     

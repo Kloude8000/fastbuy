@@ -30,7 +30,12 @@ router.post(
   "/",
   protect,
   adminOnly,
-  upload.single("image"),
+  (req, res, next) => {
+    upload.single("image")(req, res, (err) => {
+      if (err) return next(err);
+      next();
+    });
+  },
   productValidation,
   validate,
   productController.createProduct

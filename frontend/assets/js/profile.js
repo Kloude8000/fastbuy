@@ -1,110 +1,14 @@
 // ============================================
-// USER PROFILE PAGE (with Header Auth & Admin Link)
+// USER PROFILE PAGE
 // ============================================
-
-const API_BASE_URL = 'https://fastbuy-iewu.onrender.com';
-
-// Auth helpers
-function getAuthToken() {
-    return localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-}
-
-function authHeaders() {
-    const token = getAuthToken();
-    return {
-        'Content-Type': 'application/json',
-        'Authorization': token ? `Bearer ${token}` : ''
-    };
-}
-
-function clearAuth() {
-    localStorage.removeItem('authToken');
-    sessionStorage.removeItem('authToken');
-    localStorage.removeItem('user');
-    sessionStorage.removeItem('user');
-}
-
-function requireAuth() {
-    const token = getAuthToken();
-    if (!token) {
-        window.location.href = '/pages/login.html';
-        return false;
-    }
-    return true;
-}
-
-// ---------- Header Authentication (same as home.js) ----------
-async function updateHeaderAuth() {
-    const loginListItem = document.getElementById('loginListItem');
-    const userListItem = document.getElementById('userListItem');
-    const userDisplayName = document.getElementById('userDisplayName');
-    const logoutLink = document.getElementById('logoutLink');
-    const cartIcon = document.getElementById('cartIconLink');
-    const adminLink = document.getElementById('adminLink');
-
-    const token = getAuthToken();
-    if (!token) {
-        if (loginListItem) loginListItem.style.display = '';
-        if (userListItem) userListItem.style.display = 'none';
-        if (cartIcon) cartIcon.href = '/pages/login.html';
-        if (adminLink) adminLink.style.display = 'none';
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/profile`, {
-            headers: authHeaders()
-        });
-        if (response.ok) {
-            const user = await response.json();
-            if (userDisplayName) userDisplayName.textContent = `Hi, ${user.name}`;
-            if (loginListItem) loginListItem.style.display = 'none';
-            if (userListItem) userListItem.style.display = '';
-            if (cartIcon) cartIcon.href = '/pages/cart.html';
-
-            // Show admin link only for admin users
-            if (adminLink) {
-                adminLink.style.display = (user.role === 'admin') ? 'inline' : 'none';
-            }
-
-            if (logoutLink) {
-                logoutLink.onclick = (e) => {
-                    e.preventDefault();
-                    clearAuth();
-                    window.location.reload();
-                };
-            }
-        } else {
-            clearAuth();
-            if (loginListItem) loginListItem.style.display = '';
-            if (userListItem) userListItem.style.display = 'none';
-            if (cartIcon) cartIcon.href = '/pages/login.html';
-            if (adminLink) adminLink.style.display = 'none';
-        }
-    } catch (err) {
-        console.error('Failed to fetch user profile', err);
-        if (loginListItem) loginListItem.style.display = '';
-        if (userListItem) userListItem.style.display = 'none';
-        if (adminLink) adminLink.style.display = 'none';
-    }
-}
 
 // ---------- Profile Management ----------
 async function loadProfile() {
     if (!requireAuth()) return;
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/profile`, {
-            headers: authHeaders()
-        });
-        if (!response.ok) {
-            if (response.status === 401) {
-                clearAuth();
-                window.location.href = '/pages/login.html';
-                return;
-            }
-            throw new Error('Failed to load profile');
-        }
+        const response = await apiFetch(`${API_BASE_URL}/api/profile`);
+        if (!response.ok) throw new Error('Failed to load profile');
         const user = await response.json();
         document.getElementById('name').value = user.name;
         document.getElementById('email').value = user.email;
@@ -125,10 +29,9 @@ async function updateProfile(event) {
     submitBtn.textContent = 'Updating...';
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/profile`, {
+        const response = await apiFetch(`${API_BASE_URL}/api/profile`, {
             method: 'PUT',
-            headers: authHeaders(),
-            body: JSON.stringify({ name, email })
+            body: JSON.stringify({ name, email }),
         });
         const data = await response.json();
 
@@ -169,10 +72,9 @@ async function changePassword(event) {
     submitBtn.textContent = 'Changing...';
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/profile/password`, {
+        const response = await apiFetch(`${API_BASE_URL}/api/profile/password`, {
             method: 'PUT',
-            headers: authHeaders(),
-            body: JSON.stringify({ oldPassword, newPassword })
+            body: JSON.stringify({ oldPassword, newPassword }),
         });
         const data = await response.json();
 
@@ -203,14 +105,7 @@ function showMessage(containerId, message, type) {
 }
 
 // ---------- Initialization ----------
-document.addEventListener('headerLoaded', async () => {
-    await updateHeaderAuth();
-});
-
 document.addEventListener('DOMContentLoaded', async () => {
-    if (document.getElementById('loginListItem')) {
-        await updateHeaderAuth();
-    }
     if (!requireAuth()) return;
     loadProfile();
 

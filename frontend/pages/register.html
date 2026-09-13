@@ -3,110 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--SEO Meta Tags-->
-    <meta name="description" content="FastBuy | Modern Online Shopping Platform">
-    <meta name="keywords" content="FastBuy, online shopping, modern shopping, fastbuy shopping">
-    <meta name="author" content="fastbuy">
-    <!--Open Graph Meta Tags for Social Media Sharing-->
-    <meta property="og:title" content="FastBuy - Modern Online Shopping Platform">
-    <meta property="og:description" content="FastBuy is your modern online shopping destination to find the latest products at competitive prices. Shop fashion, electronics, home goods, and more anytime on FastBuy.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://fastbuy.com">
-    <meta property="og:image" content="assets/images/fastbuy-og-image.jpg">
-    <meta property="og:site_name" content="FastBuy">
-    <meta property="og:locale" content="en_US">
-    <title>FastBuy – Register</title>
+    <meta name="api-base-url" content="">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.fontawesome.com; font-src 'self' https://fonts.gstatic.com https://use.fontawesome.com data:; img-src 'self' data: https: http:; connect-src 'self' http://localhost:5000 https://fastbuy-iewu.onrender.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
+    <meta name="description" content="Create a FastBuy account">
+    <title>Register | FastBuy</title>
     <link rel="stylesheet" href="../assets/css/base.css">
-    <link rel="stylesheet" href="../assets/css/layout.css">
-    <!-- <link rel="stylesheet" href="../assets/css/home.css"> -->
     <link rel="stylesheet" href="../assets/css/components.css">
     <link rel="stylesheet" href="../assets/css/responsive.css">
-    <link rel="stylesheet" href="../assets/css/register.css">
-    <!--Google Font-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=BBH+Bogle&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <!--Font Awesome-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
-    <!--favicon-->
-    <link rel="icon" type="image/png" href="../assets/images/logo.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/logo-icon.svg">
 </head>
-<body>
+<body class="auth-page-body">
 
-    <!--HEADER LOADS HERE-->
-    <!-- <div id="header"></div> -->
+    <div class="auth-page">
+        <aside class="auth-brand">
+            <a href="/index.html" class="auth-brand-logo">
+                <img src="/assets/images/brand-logo.svg" alt="FastBuy">
+            </a>
+            <h1>Join FastBuy</h1>
+            <p>Create an account for faster checkout, order tracking, and exclusive offers.</p>
+        </aside>
 
-    <div class="register-container">
-        <div class="register-card">
-            <h2>Create Account</h2>
-            <p class="subtitle">Join FastBuy today</p>
-            
-            <form id="registerForm" novalidate>
-                <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input 
-                        type="text" 
-                        id="name" 
-                        name="name" 
-                        placeholder="Enter your full name"
-                        autocomplete="name"
-                    >
-                    <small class="error-message" id="nameError"></small>
+        <div class="auth-panel">
+            <div class="auth-card">
+                <h2>Create account</h2>
+                <p class="subtitle">It only takes a minute</p>
+
+                <form id="registerForm" novalidate>
+                    <div class="form-group">
+                        <label for="name">Full name</label>
+                        <input type="text" id="name" name="name" placeholder="Your name" autocomplete="name">
+                        <small class="error-message" id="nameError"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email">
+                        <small class="error-message" id="emailError"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Min. 6 characters" autocomplete="new-password">
+                        <small class="error-message" id="passwordError"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Repeat password" autocomplete="new-password">
+                        <small class="error-message" id="confirmError"></small>
+                    </div>
+                    <button type="submit" id="submitBtn" class="btn btn-primary btn-block">Register</button>
+                </form>
+
+                <div id="messageContainer"></div>
+                <div class="login-link">
+                    Already have an account? <a href="/pages/login.html">Sign in</a>
                 </div>
-
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email" 
-                        placeholder="you@example.com"
-                        autocomplete="email"
-                    >
-                    <small class="error-message" id="emailError"></small>
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
-                        placeholder="Create a password (min 6 characters)"
-                        autocomplete="new-password"
-                    >
-                    <small class="error-message" id="passwordError"></small>
-                </div>
-
-                <div class="form-group">
-                    <label for="confirmPassword">Confirm Password</label>
-                    <input 
-                        type="password" 
-                        id="confirmPassword" 
-                        name="confirmPassword" 
-                        placeholder="Confirm your password"
-                        autocomplete="off"
-                    >
-                    <small class="error-message" id="confirmError"></small>
-                </div>
-
-                <button type="submit" id="submitBtn" class="register-btn">
-                    Register
-                </button>
-            </form>
-
-            <div id="messageContainer"></div>
-            
-            <div class="login-link">
-                Already have an account? <a href="login.html">Sign in</a>
             </div>
         </div>
     </div>
 
-    <!--FOOTER LOADS HERE-->
-    <!-- <div id="footer"></div> -->
-
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/toast.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/api.js"></script>
     <script src="../assets/js/register.js"></script>
-    <script src="../assets/js/loaderScript.js"></script>
 </body>
 </html>

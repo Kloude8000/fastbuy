@@ -1,4 +1,5 @@
 const db = require("../config/db");
+const { sendServerError } = require("../middlewares/errorMiddleware");
 
 exports.createReview = (req, res) => {
   const userId = req.user.id;
@@ -10,11 +11,11 @@ exports.createReview = (req, res) => {
   `;
 
   db.query(checkQuery, [userId, product_id], (err, result) => {
-    if (err) return res.status(500).json(err);
+    if (err) return sendServerError(res, err, "Failed to create review");
 
     if (result.length > 0) {
       return res.status(400).json({
-        message: "You have already reviewed this product"
+        message: "You have already reviewed this product",
       });
     }
 
@@ -24,15 +25,14 @@ exports.createReview = (req, res) => {
     `;
 
     db.query(insertQuery, [userId, product_id, rating, comment], (err2) => {
-      if (err2) return res.status(500).json(err2);
+      if (err2) return sendServerError(res, err2, "Failed to create review");
 
       res.status(201).json({
-        message: "Review created successfully"
+        message: "Review created successfully",
       });
     });
   });
 };
-
 
 exports.updateReview = (req, res) => {
   const userId = req.user.id;
@@ -46,20 +46,19 @@ exports.updateReview = (req, res) => {
   `;
 
   db.query(query, [rating, comment, reviewId, userId], (err, result) => {
-    if (err) return res.status(500).json(err);
+    if (err) return sendServerError(res, err, "Failed to update review");
 
     if (result.affectedRows === 0) {
       return res.status(404).json({
-        message: "Review not found or not yours"
+        message: "Review not found or not yours",
       });
     }
 
     res.json({
-      message: "Review updated successfully"
+      message: "Review updated successfully",
     });
   });
 };
-
 
 exports.deleteReview = (req, res) => {
   const userId = req.user.id;
@@ -71,20 +70,19 @@ exports.deleteReview = (req, res) => {
   `;
 
   db.query(query, [reviewId, userId], (err, result) => {
-    if (err) return res.status(500).json(err);
+    if (err) return sendServerError(res, err, "Failed to delete review");
 
     if (result.affectedRows === 0) {
       return res.status(404).json({
-        message: "Review not found or not yours"
+        message: "Review not found or not yours",
       });
     }
 
     res.json({
-      message: "Review deleted successfully"
+      message: "Review deleted successfully",
     });
   });
 };
-
 
 exports.getProductReviews = (req, res) => {
   const productId = req.params.productId;
@@ -104,14 +102,10 @@ exports.getProductReviews = (req, res) => {
   `;
 
   db.query(query, [productId], (err, results) => {
-    if (err) {
-      return res.status(500).json(err);
-    }
-
+    if (err) return sendServerError(res, err, "Failed to fetch reviews");
     res.json(results);
   });
 };
-
 
 exports.getReviewSummary = (req, res) => {
   const productId = req.params.productId;
@@ -125,15 +119,11 @@ exports.getReviewSummary = (req, res) => {
   `;
 
   db.query(query, [productId], (err, results) => {
-    if (err) {
-      return res.status(500).json(err);
-    }
+    if (err) return sendServerError(res, err, "Failed to fetch review summary");
 
     res.json({
-      averageRating:
-        Number(results[0].averageRating || 0).toFixed(1),
-      totalReviews:
-        results[0].totalReviews
+      averageRating: Number(results[0].averageRating || 0).toFixed(1),
+      totalReviews: results[0].totalReviews,
     });
   });
 };

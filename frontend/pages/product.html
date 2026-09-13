@@ -3,33 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="api-base-url" content="">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.fontawesome.com; font-src 'self' https://fonts.gstatic.com https://use.fontawesome.com data:; img-src 'self' data: https: http:; connect-src 'self' http://localhost:5000 https://fastbuy-iewu.onrender.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
     <meta name="description" content="Product details - FastBuy">
     <title>Product | FastBuy</title>
     <link rel="stylesheet" href="../assets/css/base.css">
     <link rel="stylesheet" href="../assets/css/layout.css">
-    <!-- <link rel="stylesheet" href="../assets/css/components.css"> -->
-    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
     <link rel="stylesheet" href="../assets/css/product.css">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
-    <link rel="icon" type="image/png" href="../assets/images/logo.jpg">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/logo-icon.svg">
 </head>
 <body>
 
     <div id="header"></div>
 
-    <main class="product-main">
+    <main class="page-main product-page">
         <div class="container">
-            <!-- Breadcrumb -->
             <nav class="breadcrumb" aria-label="Breadcrumb">
                 <ol>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="#" id="breadcrumb-category">Products</a></li>
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/pages/shop.html" id="breadcrumb-category">Products</a></li>
                     <li aria-current="page" id="breadcrumb-product">Loading...</li>
                 </ol>
             </nav>
 
-            <!-- Product Details Section -->
             <div class="product-detail" id="product-detail">
                 <div class="product-gallery">
                     <img id="product-image" src="" alt="Product image" class="product-main-image">
@@ -47,67 +49,59 @@
                     <div class="product-description" id="product-description"></div>
                     <div class="product-actions">
                         <div class="quantity-selector">
-                            <label for="quantity">Quantity:</label>
+                            <label for="quantity">Quantity</label>
                             <input type="number" id="quantity" name="quantity" value="1" min="1" max="99">
                         </div>
-                        <button id="add-to-cart-btn" class="btn btn-primary">Add to Cart</button>
-                        <button id="wishlist-btn" class="btn btn-secondary">Add to Wishlist</button>
+                        <button type="button" id="add-to-cart-btn" class="btn btn-primary btn-block">Add to Cart</button>
                     </div>
                     <div class="product-meta">
-                        <div>
-                            <p><strong>Category:</strong> <span id="product-category"></span></p>
-                            <p><strong>SKU:</strong> <span id="product-sku">N/A</span></p>
-                        </div>
-                        <div class="to-cart">
-                            <a href="cart.html">Go to cart</a>
-                        </div>
+                        <p><strong>Category:</strong> <span id="product-category"></span></p>
                     </div>
                 </div>
             </div>
 
-            <!-- Reviews Section -->
-            <section class="reviews-section">
-                <h2>Customer Reviews</h2>
+            <section class="reviews-section surface-card">
+                <h2 class="section-title">Customer reviews</h2>
                 <div id="reviews-list" class="reviews-list">
-                    <p>Loading reviews...</p>
+                    <p class="loading-state">Loading reviews...</p>
                 </div>
-                <!-- Write a Review (visible only when logged in) -->
                 <div id="write-review" class="write-review" style="display: none;">
-                    <h3>Write a Review</h3>
+                    <h3>Write a review</h3>
                     <form id="review-form">
                         <div class="form-group">
                             <label>Rating</label>
                             <div class="rating-input">
-                                <span class="star" data-rating="1">☆</span>
-                                <span class="star" data-rating="2">☆</span>
-                                <span class="star" data-rating="3">☆</span>
-                                <span class="star" data-rating="4">☆</span>
-                                <span class="star" data-rating="5">☆</span>
+                                <span class="star" data-rating="1">&#9734;</span>
+                                <span class="star" data-rating="2">&#9734;</span>
+                                <span class="star" data-rating="3">&#9734;</span>
+                                <span class="star" data-rating="4">&#9734;</span>
+                                <span class="star" data-rating="5">&#9734;</span>
                             </div>
                             <input type="hidden" id="rating-value" name="rating" required>
                         </div>
                         <div class="form-group">
-                            <label for="review-comment">Your Review</label>
-                            <textarea id="review-comment" name="comment" rows="4" required placeholder="Share your experience with this product..."></textarea>
+                            <label for="review-comment">Your review</label>
+                            <textarea id="review-comment" name="comment" rows="4" required placeholder="Share your experience..."></textarea>
                         </div>
-                        <button type="submit" id="submit-review-btn" class="btn btn-primary">Submit Review</button>
-                        <div id="review-message"></div>
+                        <button type="submit" id="submit-review-btn" class="btn btn-primary">Submit review</button>
+                        <div id="review-message" class="form-message"></div>
                     </form>
                 </div>
             </section>
 
-            <!-- Related Products -->
             <section class="related-products">
-                <h2>You May Also Like</h2>
-                <div id="related-grid" class="product-grid">
-                    <p>Loading...</p>
-                </div>
+                <h2 class="section-title">You may also like</h2>
+                <div id="related-grid" class="related-grid"></div>
             </section>
         </div>
     </main>
 
-    <!-- <div id="footer"></div> -->
+    <div id="footer"></div>
 
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/toast.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/api.js"></script>
     <script src="../assets/js/hamburger.js"></script>
     <script src="../assets/js/loaderScript.js"></script>
     <script src="../assets/js/product.js"></script>

@@ -3,47 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="api-base-url" content="">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.fontawesome.com; font-src 'self' https://fonts.gstatic.com https://use.fontawesome.com data:; img-src 'self' data: https: http:; connect-src 'self' http://localhost:5000 https://fastbuy-iewu.onrender.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
     <meta name="description" content="Order confirmation - FastBuy">
     <title>Order Confirmation | FastBuy</title>
     <link rel="stylesheet" href="../assets/css/base.css">
     <link rel="stylesheet" href="../assets/css/layout.css">
-    <!-- <link rel="stylesheet" href="../assets/css/components.css"> -->
-    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
     <link rel="stylesheet" href="../assets/css/order-confirmation.css">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
-    <link rel="icon" type="image/png" href="../assets/images/logo.jpg">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/logo-icon.svg">
 </head>
 <body>
 
     <div id="header"></div>
 
-    <main class="confirmation-main">
-        <div class="container confirmation-container">
-            <!-- Success Header -->
-            <div class="confirmation-header">
-                <i class="fas fa-check-circle"></i>
-                <h1>Thank You for Your Order!</h1>
-                <p>Your order has been placed successfully.</p>
+    <main class="page-main confirmation-page">
+        <div class="container confirmation-wrap">
+            <nav class="checkout-steps" aria-label="Checkout progress">
+                <span class="checkout-step is-done">Cart</span>
+                <span class="checkout-step-divider">/</span>
+                <span class="checkout-step is-done">Checkout</span>
+                <span class="checkout-step-divider">/</span>
+                <span class="checkout-step is-active">Confirmation</span>
+            </nav>
+
+            <div class="confirmation-hero surface-card">
+                <i class="fas fa-check-circle confirmation-icon" aria-hidden="true"></i>
+                <h1 class="section-title">Order confirmed</h1>
+                <p>Thank you — we are preparing your order.</p>
             </div>
 
-            <!-- Order Details Section -->
-            <div class="confirmation-card" id="order-details">
-                <div class="confirmation-loading">
-                    <i class="fas fa-spinner fa-spin"></i> Loading order details...
+            <div class="surface-card" id="order-details">
+                <div class="loading-state">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading order details...</p>
                 </div>
             </div>
 
-            <!-- Action Buttons -->
             <div class="confirmation-actions">
-                <a href="shop.html" class="btn btn-secondary">Continue Shopping</a>
-                <a href="orders.html" class="btn btn-primary">View Order History</a>
+                <a href="/pages/orders.html" class="btn btn-primary">View order history</a>
+                <a href="/pages/shop.html" class="btn btn-secondary">Continue shopping</a>
             </div>
         </div>
     </main>
 
-    <!-- <div id="footer"></div> -->
+    <div id="footer"></div>
 
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/toast.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/api.js"></script>
     <script src="../assets/js/hamburger.js"></script>
     <script src="../assets/js/loaderScript.js"></script>
     <script src="../assets/js/order-confirmation.js"></script>

@@ -1,80 +1,6 @@
 // ============================================
-// SHOP PAGE - PRODUCT LISTING, FILTERS, PAGINATION (with Header Auth)
+// SHOP PAGE - PRODUCT LISTING, FILTERS, PAGINATION
 // ============================================
-
-const API_BASE_URL = 'https://fastbuy-iewu.onrender.com';
-
-// ---------- Helper Functions ----------
-function getAuthToken() {
-    return localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-}
-
-function authHeaders() {
-    const token = getAuthToken();
-    return {
-        'Content-Type': 'application/json',
-        'Authorization': token ? `Bearer ${token}` : ''
-    };
-}
-
-function clearAuth() {
-    localStorage.removeItem('authToken');
-    sessionStorage.removeItem('authToken');
-    localStorage.removeItem('user');
-    sessionStorage.removeItem('user');
-}
-
-// ========== HEADER AUTH ==========
-async function updateHeaderAuth() {
-    const loginListItem = document.getElementById('loginListItem');
-    const userListItem = document.getElementById('userListItem');
-    const userDisplayName = document.getElementById('userDisplayName');
-    const logoutLink = document.getElementById('logoutLink');
-    const cartIcon = document.getElementById('cartIconLink');
-    const adminLink = document.getElementById('adminLink');
-
-    const token = getAuthToken();
-    if (!token) {
-        if (loginListItem) loginListItem.style.display = '';
-        if (userListItem) userListItem.style.display = 'none';
-        if (cartIcon) cartIcon.href = '/pages/login.html';
-        if (adminLink) adminLink.style.display = 'none';
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/profile`, {
-            headers: authHeaders()
-        });
-        if (response.ok) {
-            const user = await response.json();
-            if (userDisplayName) userDisplayName.textContent = `Hi, ${user.name}`;
-            if (loginListItem) loginListItem.style.display = 'none';
-            if (userListItem) userListItem.style.display = '';
-            if (cartIcon) cartIcon.href = '/pages/cart.html';
-
-            if (adminLink) {
-                adminLink.style.display = (user.role === 'admin') ? 'inline' : 'none';
-            }
-
-            if (logoutLink) {
-                logoutLink.onclick = (e) => {
-                    e.preventDefault();
-                    clearAuth();
-                    window.location.reload();
-                };
-            }
-        } else {
-            clearAuth();
-            if (loginListItem) loginListItem.style.display = '';
-            if (userListItem) userListItem.style.display = 'none';
-            if (cartIcon) cartIcon.href = '/pages/login.html';
-            if (adminLink) adminLink.style.display = 'none';
-        }
-    } catch (err) {
-        console.error('Failed to fetch user profile', err);
-    }
-}
 
 // ---------- Global State ----------
 let currentState = {
@@ -98,7 +24,9 @@ const sortSelect = document.getElementById('sort-select');
 // ---------- Load Categories ----------
 async function loadCategories() {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/categories`);
+        const response = await apiFetch(`${API_BASE_URL}/api/categories`, {
+            redirectOn401: false,
+        });
         if (!response.ok) throw new Error();
         const categories = await response.json();
         const container = document.getElementById('category-filters');
@@ -176,7 +104,7 @@ async function loadProducts() {
     }
 
     try {
-        const response = await fetch(url);
+        const response = await apiFetch(url, { redirectOn401: false });
         if (!response.ok) throw new Error('Failed to fetch products');
         const data = await response.json();
         const products = data.products || [];
@@ -190,7 +118,6 @@ async function loadProducts() {
         productsGrid.innerHTML = products.map(product => renderProductCard(product)).join('');
         renderPagination();
         attachCartButtons();
-        attachWishlistButtons();
     } catch (err) {
         console.error(err);
         productsGrid.innerHTML = '<p class="error">Failed to load products. Please try again.</p>';
@@ -204,7 +131,7 @@ function renderProductCard(product) {
     if (isSale) badgeHtml = '<span class="product-badge product-badge--sale">Sale</span>';
     else if (isNew) badgeHtml = '<span class="product-badge product-badge--new">New</span>';
 
-    const imageUrl = product.image ? `${API_BASE_URL}/uploads/${product.image}` : 'https://via.placeholder.com/300x300?text=No+Image';
+    const imageUrl = uploadUrl(product.image);
     const categoryName = product.category_name || 'Uncategorized';
     const priceHtml = isSale && product.old_price
         ? `<span class="product-price">$${parseFloat(product.price).toFixed(2)}</span>
@@ -214,22 +141,24 @@ function renderProductCard(product) {
     return `
         <article class="product-card">
             <div class="product-media">
-                <a href="product.html?id=${product.id}">
-                    <img src="${imageUrl}" alt="${escapeHtml(product.name)}">
+                <a class="product-media-link" href="/pages/product.html?id=${product.id}" aria-label="${escapeAttr(product.name)}">
+                    <img src="${imageUrl}" alt="${escapeAttr(product.name)}" loading="lazy">
+                    ${badgeHtml}
                 </a>
-                ${badgeHtml}
-                <button class="product-wish" data-product-id="${product.id}">
+                <button type="button" class="product-wish" data-product-id="${product.id}" aria-label="Save to wishlist">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                     </svg>
                 </button>
             </div>
-            <div class="product-body">
-                <div class="product-category">${escapeHtml(categoryName)}</div>
-                <h3 class="product-title">${escapeHtml(product.name)}</h3>
-                <div class="product-meta">${priceHtml}</div>
-            </div>
-            <button class="product-add" data-product-id="${product.id}">Add to Cart</button>
+            <a class="product-card-link" href="/pages/product.html?id=${product.id}" style="text-decoration: none;">
+                <div class="product-body">
+                    <p class="product-category">${escapeHtml(categoryName)}</p>
+                    <h3 class="product-title">${escapeHtml(product.name)}</h3>
+                    <div class="product-meta">${priceHtml}</div>
+                </div>
+            </a>
+            <button type="button" class="btn btn-primary product-add" data-product-id="${product.id}">Add to Cart</button>
         </article>
     `;
 }
@@ -272,26 +201,25 @@ function renderPagination() {
 async function addToCart(productId, quantity = 1) {
     const token = getAuthToken();
     if (!token) {
-        alert('Please login to add items to cart');
+        showToast('Please log in to add items to cart', 'info');
         window.location.href = '/pages/login.html';
         return false;
     }
     try {
-        const response = await fetch(`${API_BASE_URL}/api/cart`, {
+        const response = await apiFetch(`${API_BASE_URL}/api/cart`, {
             method: 'POST',
-            headers: authHeaders(),
-            body: JSON.stringify({ product_id: productId, quantity })
+            body: JSON.stringify({ product_id: productId, quantity }),
         });
         const data = await response.json();
         if (response.ok) {
-            alert('Added to cart!');
+            window.location.href = '/pages/cart.html';
             return true;
-        } else {
-            alert(data.message || 'Failed to add');
-            return false;
         }
+        showToast(data.message || 'Failed to add', 'error');
+        return false;
     } catch (err) {
-        alert('Network error');
+        if (err instanceof ApiError) return false;
+        showToast('Network error', 'error');
         return false;
     }
 }
@@ -313,20 +241,6 @@ async function cartClickHandler(e) {
         btn.disabled = false;
         btn.textContent = 'Add to Cart';
     }
-}
-
-function attachWishlistButtons() {
-    document.querySelectorAll('.product-wish').forEach(btn => {
-        btn.removeEventListener('click', wishlistClickHandler);
-        btn.addEventListener('click', wishlistClickHandler);
-    });
-}
-
-function wishlistClickHandler(e) {
-    e.preventDefault();
-    const btn = e.currentTarget;
-    const productId = btn.dataset.productId;
-    alert(`Wishlist feature coming soon! Product ID: ${productId}`);
 }
 
 // ---------- Sort & Search ----------
@@ -387,26 +301,32 @@ function loadFromURL() {
     }, 100);
 }
 
-// ---------- Helper ----------
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-    });
+// ---------- Initialization ----------
+function initFilterDrawer() {
+    const toggle = document.getElementById('filter-toggle');
+    const sidebar = document.getElementById('shop-sidebar');
+    const overlay = document.getElementById('filter-overlay');
+    const closeBtn = document.getElementById('filter-close');
+
+    function openFilters() {
+        sidebar?.classList.add('is-open');
+        overlay?.classList.add('is-visible');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeFilters() {
+        sidebar?.classList.remove('is-open');
+        overlay?.classList.remove('is-visible');
+        document.body.style.overflow = '';
+    }
+
+    toggle?.addEventListener('click', openFilters);
+    closeBtn?.addEventListener('click', closeFilters);
+    overlay?.addEventListener('click', closeFilters);
 }
 
-// ---------- Initialization ----------
-document.addEventListener('headerLoaded', async () => {
-    await updateHeaderAuth();
-});
-
 document.addEventListener('DOMContentLoaded', async () => {
-    if (document.getElementById('loginListItem')) {
-        await updateHeaderAuth();
-    }
+    initFilterDrawer();
     await loadCategories();
     attachTagListeners();
     initSortAndSearch();

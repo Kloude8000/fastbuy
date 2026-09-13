@@ -1,5 +1,6 @@
 const db = require("../config/db");
 const bcrypt = require("bcryptjs");
+const { sendServerError } = require("../middlewares/errorMiddleware");
 
 exports.getProfile = (req, res) => {
   const userId = req.user.id;
@@ -11,8 +12,10 @@ exports.getProfile = (req, res) => {
   `;
 
   db.query(query, [userId], (err, result) => {
-    if (err) return res.status(500).json(err);
-    if (result.length === 0) return res.status(404).json({ message: "User not found" });
+    if (err) return sendServerError(res, err, "Failed to fetch profile");
+    if (result.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
     res.json(result[0]);
   });
 };
@@ -21,17 +24,30 @@ exports.updateProfile = (req, res) => {
   const userId = req.user.id;
   const { name, email } = req.body;
 
-  const query = `
-    UPDATE users
-    SET name = ?, email = ?
-    WHERE id = ?
-  `;
+  const checkEmailQuery =
+    "SELECT id FROM users WHERE email = ? AND id != ?";
 
-  db.query(query, [name, email, userId], (err) => {
-    if (err) return res.status(500).json(err);
+  db.query(checkEmailQuery, [email, userId], (err, existing) => {
+    if (err) return sendServerError(res, err, "Failed to update profile");
 
-    res.json({
-      message: "Profile updated successfully"
+    if (existing.length > 0) {
+      return res.status(400).json({
+        message: "Email is already in use by another account",
+      });
+    }
+
+    const query = `
+      UPDATE users
+      SET name = ?, email = ?
+      WHERE id = ?
+    `;
+
+    db.query(query, [name, email, userId], (err2) => {
+      if (err2) return sendServerError(res, err2, "Failed to update profile");
+
+      res.json({
+        message: "Profile updated successfully",
+      });
     });
   });
 };
@@ -45,30 +61,42 @@ exports.changePassword = (req, res) => {
   `;
 
   db.query(getUserQuery, [userId], (err, result) => {
-    if (err) return res.status(500).json(err);
+    if (err) return sendServerError(res, err, "Failed to change password");
+
+    if (!result.length) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
     const user = result[0];
 
     bcrypt.compare(oldPassword, user.password, (err2, isMatch) => {
+      if (err2) return sendServerError(res, err2, "Failed to change password");
+
       if (!isMatch) {
         return res.status(400).json({
-          message: "Old password is incorrect"
+          message: "Old password is incorrect",
         });
       }
 
-      const hashedPassword = bcrypt.hashSync(newPassword, 10);
+      bcrypt.hash(newPassword, 10, (err3, hashedPassword) => {
+        if (err3) {
+          return sendServerError(res, err3, "Failed to change password");
+        }
 
-      const updateQuery = `
-        UPDATE users
-        SET password = ?
-        WHERE id = ?
-      `;
+        const updateQuery = `
+          UPDATE users
+          SET password = ?
+          WHERE id = ?
+        `;
 
-      db.query(updateQuery, [hashedPassword, userId], (err3) => {
-        if (err3) return res.status(500).json(err3);
+        db.query(updateQuery, [hashedPassword, userId], (err4) => {
+          if (err4) {
+            return sendServerError(res, err4, "Failed to change password");
+          }
 
-        res.json({
-          message: "Password changed successfully"
+          res.json({
+            message: "Password changed successfully",
+          });
         });
       });
     });

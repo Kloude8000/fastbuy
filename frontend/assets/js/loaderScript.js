@@ -6,16 +6,21 @@
 // ============================================
 
 async function loadComponent(id, file) {
+    const el = document.getElementById(id);
+    if (!el) return false;
+
     try {
         const res = await fetch(file);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const html = await res.text();
-        document.getElementById(id).innerHTML = html;
-        // If header just loaded, dispatch an event so other scripts can update it
+        el.innerHTML = html;
+        if (id === "footer") {
+            const yearEl = document.getElementById("footer-year");
+            if (yearEl) yearEl.textContent = new Date().getFullYear();
+        }
         if (id === "header") {
-            // Small delay to ensure DOM is updated
             setTimeout(() => {
-                const event = new CustomEvent("headerLoaded");
-                document.dispatchEvent(event);
+                document.dispatchEvent(new CustomEvent("headerLoaded"));
             }, 50);
         }
         return true;
@@ -25,8 +30,10 @@ async function loadComponent(id, file) {
     }
 }
 
-// Load components on every page
 document.addEventListener("DOMContentLoaded", () => {
     loadComponent("header", "/components/header.html");
     loadComponent("footer", "/components/footer.html");
+
+    const yearEl = document.getElementById("footer-year");
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
 });
