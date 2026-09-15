@@ -216,7 +216,7 @@ exports.initializePaystack = async (req, res) => {
   const userId = req.user.id;
   const userEmail = req.user.email;
 
-  if (!paystack.getSecretKey?.() && !process.env.PAYSTACK_SECRET_KEY) {
+  if (!paystack.getSecretKey() || !paystack.getPublicKey()) {
     return res.status(503).json({
       success: false,
       message: "Paystack is not configured",

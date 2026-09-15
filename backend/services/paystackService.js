@@ -95,6 +95,7 @@ function verifyWebhookSignature(rawBody, signature) {
 }
 
 module.exports = {
+  getSecretKey,
   getPublicKey,
   getCurrency,
   ghsToPesewas,
