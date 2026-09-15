@@ -13,7 +13,9 @@ const reviewRoutes = require("./routes/reviewRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const checkoutRoutes = require("./routes/checkoutRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 const contactRoutes = require("./routes/contactRoutes");
+const paymentController = require("./controllers/paymentController");
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
 
 const app = express();
@@ -38,6 +40,13 @@ app.use(
     credentials: true,
   })
 );
+
+app.post(
+  "/api/webhooks/paystack",
+  express.raw({ type: "application/json" }),
+  paymentController.handlePaystackWebhook
+);
+
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(cookieParser());
@@ -54,6 +63,7 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/checkout", checkoutRoutes);
+app.use("/api/payments", paymentRoutes);
 app.use("/api/contact", contactRoutes);
 
 app.get("/", (req, res) => {

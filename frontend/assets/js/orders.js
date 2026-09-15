@@ -53,7 +53,7 @@ function renderOrderCard(order) {
                 <span class="status-pill ${statusClass}">${order.status}</span>
             </div>
             <div class="order-footer">
-                <span class="order-total">Total: $${parseFloat(order.total_price).toFixed(2)}</span>
+                <span class="order-total">Total: ${formatGhs(order.total_price)}</span>
                 <a href="/pages/order-confirmation.html?orderId=${order.id}" class="view-order-btn">View Details</a>
             </div>
         </div>

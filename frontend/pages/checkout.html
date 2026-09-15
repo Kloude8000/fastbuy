@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="api-base-url" content="">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.fontawesome.com; font-src 'self' https://fonts.gstatic.com https://use.fontawesome.com data:; img-src 'self' data: https: http:; connect-src 'self' http://localhost:5000 https://fastbuy-iewu.onrender.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://js.paystack.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.fontawesome.com; font-src 'self' https://fonts.gstatic.com https://use.fontawesome.com data:; img-src 'self' data: https: http:; connect-src 'self' http://localhost:5000 https://fastbuy-iewu.onrender.com https://api.paystack.co https://standard.paystack.co; frame-src https://js.paystack.co https://checkout.paystack.com https://standard.paystack.co; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
     <title>Checkout | FastBuy</title>
     <link rel="stylesheet" href="../assets/css/base.css">
     <link rel="stylesheet" href="../assets/css/layout.css">
@@ -36,8 +36,25 @@
             <div class="checkout-layout">
                 <div class="checkout-main-panel surface-card">
                     <h2>Review &amp; place order</h2>
-                    <p class="checkout-lede">Cash on delivery · Secure account checkout</p>
+                    <p class="checkout-lede">Pay with MoMo / card or cash on delivery · Prices in GHS</p>
                     <form id="checkout-form">
+                        <fieldset class="payment-method-group">
+                            <legend>Payment method</legend>
+                            <label class="payment-option">
+                                <input type="radio" name="paymentMethod" value="paystack" checked>
+                                <span>
+                                    <strong>Paystack</strong>
+                                    <small>Mobile Money, card, bank (GHS)</small>
+                                </span>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="paymentMethod" value="cod">
+                                <span>
+                                    <strong>Cash on Delivery</strong>
+                                    <small>Pay when your order arrives</small>
+                                </span>
+                            </label>
+                        </fieldset>
                         <button type="submit" id="place-order-btn" class="btn btn-primary btn-block">Place order</button>
                         <p class="summary-note">By placing your order, you agree to our terms of service.</p>
                     </form>
@@ -50,7 +67,7 @@
                     </div>
                     <div class="summary-row total">
                         <span>Total</span>
-                        <span id="order-total">$0.00</span>
+                        <span id="order-total">GH₵0.00</span>
                     </div>
                 </aside>
             </div>
@@ -59,8 +76,10 @@
 
     <div id="footer"></div>
 
+    <script src="https://js.paystack.co/v2/inline.js"></script>
     <script src="../assets/js/config.js"></script>
     <script src="../assets/js/toast.js"></script>
+    <script src="../assets/js/currency.js"></script>
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/hamburger.js"></script>

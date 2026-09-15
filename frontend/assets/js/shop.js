@@ -134,9 +134,9 @@ function renderProductCard(product) {
     const imageUrl = uploadUrl(product.image);
     const categoryName = product.category_name || 'Uncategorized';
     const priceHtml = isSale && product.old_price
-        ? `<span class="product-price">$${parseFloat(product.price).toFixed(2)}</span>
-           <span class="product-price product-price--was">$${parseFloat(product.old_price).toFixed(2)}</span>`
-        : `<span class="product-price">$${parseFloat(product.price).toFixed(2)}</span>`;
+        ? `<span class="product-price">${formatGhs(product.price)}</span>
+           <span class="product-price product-price--was">${formatGhs(product.old_price)}</span>`
+        : `<span class="product-price">${formatGhs(product.price)}</span>`;
 
     return `
         <article class="product-card">

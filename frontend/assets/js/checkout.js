@@ -27,12 +27,12 @@ async function loadCartSummary() {
                 <img class="order-item-image" src="${uploadUrl(item.image)}" alt="${escapeHtml(item.name)}">
                 <div class="order-item-details">
                     <div class="order-item-name">${escapeHtml(item.name)}</div>
-                    <div class="order-item-price">$${parseFloat(item.price).toFixed(2)}</div>
+                    <div class="order-item-price">${formatGhs(item.price)}</div>
                     <div class="order-item-quantity">Qty: ${item.quantity}</div>
                 </div>
             </div>
         `).join('');
-        orderTotalSpan.innerText = `$${grandTotal.toFixed(2)}`;
+        orderTotalSpan.innerText = formatGhs(grandTotal);
         window.orderTotal = grandTotal;
 
     } catch (err) {
@@ -41,41 +41,101 @@ async function loadCartSummary() {
     }
 }
 
+function getSelectedPaymentMethod() {
+    const selected = document.querySelector('input[name="paymentMethod"]:checked');
+    return selected ? selected.value : 'cod';
+}
+
+function setCheckoutLoading(isLoading, label) {
+    const placeOrderBtn = document.getElementById('place-order-btn');
+    if (!placeOrderBtn) return;
+    placeOrderBtn.disabled = isLoading;
+    placeOrderBtn.textContent = label || (isLoading ? 'Processing...' : 'Place order');
+}
+
+async function placeCodOrder() {
+    const response = await apiFetch(`${API_BASE_URL}/api/checkout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paymentMethod: 'cod' }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+        showToast(
+            `Order #${data.orderId} placed — ${formatGhs(data.total)}`,
+            'success'
+        );
+        window.location.href = `/pages/order-confirmation.html?orderId=${data.orderId}`;
+        return;
+    }
+
+    showToast(data.message || 'Order failed. Please try again.', 'error');
+    setCheckoutLoading(false, 'Place order');
+}
+
+function redirectToPaymentCallback(reference) {
+    const target = `/pages/payment-callback.html?reference=${encodeURIComponent(reference)}`;
+    window.location.href = target;
+}
+
+async function startPaystackPayment() {
+    if (typeof PaystackPop === 'undefined') {
+        showToast('Paystack failed to load. Please refresh and try again.', 'error');
+        setCheckoutLoading(false, 'Place order');
+        return;
+    }
+
+    const response = await apiFetch(`${API_BASE_URL}/api/payments/paystack/initialize`, {
+        method: 'POST',
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success || !data.access_code) {
+        showToast(data.message || 'Unable to start Paystack payment.', 'error');
+        setCheckoutLoading(false, 'Place order');
+        return;
+    }
+
+    const popup = new PaystackPop();
+    popup.resumeTransaction(data.access_code, {
+        onSuccess: function (transaction) {
+            const reference =
+                transaction?.reference || transaction?.trxref || data.reference;
+            redirectToPaymentCallback(reference);
+        },
+        onCancel: function () {
+            setCheckoutLoading(false, 'Place order');
+        },
+        onError: function (error) {
+            showToast(error?.message || 'Paystack payment failed to load.', 'error');
+            setCheckoutLoading(false, 'Place order');
+        },
+    });
+}
+
 async function placeOrder(event) {
     event.preventDefault();
 
-    const placeOrderBtn = document.getElementById('place-order-btn');
-    placeOrderBtn.disabled = true;
-    placeOrderBtn.textContent = 'Processing...';
+    setCheckoutLoading(true);
 
     try {
-        const response = await apiFetch(`${API_BASE_URL}/api/checkout`, {
-            method: 'POST',
-        });
-
-        const data = await response.json();
-
-        if (response.ok && data.success) {
-            showToast(
-                `Order #${data.orderId} placed — $${parseFloat(data.total).toFixed(2)}`,
-                'success'
-            );
-            window.location.href = `/pages/order-confirmation.html?orderId=${data.orderId}`;
-        } else {
-            showToast(data.message || 'Order failed. Please try again.', 'error');
-            placeOrderBtn.disabled = false;
-            placeOrderBtn.textContent = 'Place Order';
+        const method = getSelectedPaymentMethod();
+        if (method === 'paystack') {
+            await startPaystackPayment();
+            return;
         }
+        await placeCodOrder();
     } catch (err) {
         if (err instanceof ApiError) {
-            placeOrderBtn.disabled = false;
-            placeOrderBtn.textContent = 'Place Order';
+            setCheckoutLoading(false, 'Place order');
             return;
         }
         console.error('Checkout error:', err);
         showToast('Network error. Please check your connection and try again.', 'error');
-        placeOrderBtn.disabled = false;
-        placeOrderBtn.textContent = 'Place Order';
+        setCheckoutLoading(false, 'Place order');
     }
 }
 

@@ -31,10 +31,26 @@ function validateEnv() {
     if (!process.env.CLIENT_ORIGIN) {
       errors.push("CLIENT_ORIGIN is required in production");
     }
+    if (!process.env.PAYSTACK_SECRET_KEY) {
+      errors.push("PAYSTACK_SECRET_KEY is required in production");
+    }
+    if (!process.env.PAYSTACK_PUBLIC_KEY) {
+      errors.push("PAYSTACK_PUBLIC_KEY is required in production");
+    }
   } else if (!process.env.CLIENT_ORIGIN) {
     console.warn(
       "Warning: CLIENT_ORIGIN not set. Using default local dev origins."
     );
+  }
+
+  if (!process.env.PAYSTACK_SECRET_KEY || !process.env.PAYSTACK_PUBLIC_KEY) {
+    console.warn(
+      "Warning: Paystack keys not set. Online payments will be unavailable."
+    );
+  }
+
+  if (!process.env.PAYSTACK_CURRENCY) {
+    process.env.PAYSTACK_CURRENCY = "GHS";
   }
 
   if (errors.length > 0) {

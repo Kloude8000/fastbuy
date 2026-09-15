@@ -69,9 +69,9 @@ function displayOrder(data) {
                     <img class="item-image" src="${uploadUrl(item.image)}" alt="${escapeHtml(item.name)}">
                     <span class="item-name">${escapeHtml(item.name)}</span>
                 </td>
-                <td>$${parseFloat(item.price).toFixed(2)}</td>
+                <td>${formatGhs(item.price)}</td>
                 <td>${item.quantity}</td>
-                <td>$${itemTotal.toFixed(2)}</td>
+                <td>${formatGhs(itemTotal)}</td>
             </tr>
         `;
     });
@@ -86,7 +86,8 @@ function displayOrder(data) {
             </div>
             <div class="info-group">
                 <p><strong>Order Status:</strong> <span class="status-pill ${statusClass}">${order.status}</span></p>
-                <p><strong>Payment Method:</strong> Cash on Delivery</p>
+                <p><strong>Payment Method:</strong> ${formatPaymentMethod(order.payment_method)}</p>
+                <p><strong>Payment Status:</strong> ${formatPaymentStatus(order.payment_status)}</p>
             </div>
         </div>
         <table class="order-items">
@@ -99,7 +100,7 @@ function displayOrder(data) {
             <tfoot>
                 <tr class="order-total-row">
                     <td colspan="3" style="text-align:right;">Total:</td>
-                    <td>$${total.toFixed(2)}</td>
+                    <td>${formatGhs(total)}</td>
                 </tr>
             </tfoot>
         </table>

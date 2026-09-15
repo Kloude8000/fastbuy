@@ -30,8 +30,8 @@ async function loadCart() {
         }
 
         itemsList.innerHTML = items.map(item => renderCartItem(item)).join('');
-        document.getElementById('summary-subtotal').innerText = `$${total.toFixed(2)}`;
-        document.getElementById('summary-total').innerText = `$${total.toFixed(2)}`;
+        document.getElementById('summary-subtotal').innerText = formatGhs(total);
+        document.getElementById('summary-total').innerText = formatGhs(total);
 
         loadingDiv.style.display = 'none';
         containerDiv.style.display = 'block';
@@ -58,13 +58,13 @@ function renderCartItem(item) {
                 <div class="cart-product-name">${escapeHtml(item.name)}</div>
                 <div class="cart-product-category">${escapeHtml(item.category || 'Product')}</div>
             </div>
-            <div class="cart-price">$${productPrice}</div>
+            <div class="cart-price">${formatGhs(productPrice)}</div>
             <div class="cart-quantity">
                 <button type="button" class="quantity-btn dec" aria-label="Decrease quantity">−</button>
                 <input type="number" class="quantity-input" value="${item.quantity}" min="1" max="${maxQty}" step="1" aria-label="Quantity">
                 <button type="button" class="quantity-btn inc" aria-label="Increase quantity">+</button>
             </div>
-            <div class="cart-subtotal">$${itemTotal}</div>
+            <div class="cart-subtotal">${formatGhs(itemTotal)}</div>
             <button type="button" class="cart-remove" aria-label="Remove item"><i class="fas fa-trash-alt"></i></button>
         </div>
     `;

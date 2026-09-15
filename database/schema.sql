@@ -123,11 +123,32 @@ CREATE TABLE `orders` (
   `user_id` int DEFAULT NULL,
   `total_price` decimal(10,2) DEFAULT NULL,
   `status` enum('pending','processing','shipped','delivered','cancelled') DEFAULT 'pending',
+  `payment_method` enum('cod','paystack') NOT NULL DEFAULT 'cod',
+  `payment_status` enum('unpaid','paid','failed') NOT NULL DEFAULT 'unpaid',
+  `paystack_reference` varchar(100) DEFAULT NULL,
+  `currency` varchar(3) NOT NULL DEFAULT 'GHS',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `pending_payments` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `reference` varchar(100) NOT NULL,
+  `amount_ghs` decimal(10,2) NOT NULL,
+  `amount_pesewas` int NOT NULL,
+  `currency` varchar(3) NOT NULL DEFAULT 'GHS',
+  `status` enum('pending','completed','failed') NOT NULL DEFAULT 'pending',
+  `order_id` int DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `reference` (`reference`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `pending_payments_user_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `pending_payments_order_fk` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

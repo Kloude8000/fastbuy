@@ -61,14 +61,16 @@ async function loadOrders() {
         const table = `
             <table>
                 <thead>
-                    <tr><th>ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th><th>Action</th></tr>
+                    <tr><th>ID</th><th>Customer</th><th>Total</th><th>Payment</th><th>Pay status</th><th>Status</th><th>Date</th><th>Action</th></tr>
                 </thead>
                 <tbody>
                     ${orders.map(order => `
                         <tr>
                             <td>#${order.id}</td>
                             <td>${escapeHtml(order.customer_name)} (${escapeHtml(order.email)})</td>
-                            <td>$${parseFloat(order.total_price).toFixed(2)}</td>
+                            <td>${formatGhs(order.total_price)}</td>
+                            <td>${formatPaymentMethod(order.payment_method)}</td>
+                            <td>${formatPaymentStatus(order.payment_status)}</td>
                             <td><span class="status-badge status-${order.status}">${order.status}</span></td>
                             <td>${new Date(order.created_at).toLocaleDateString()}</td>
                             <td><button class="btn-sm update-order-status" data-id="${order.id}" data-status="${order.status}">Update Status</button></td>
@@ -138,7 +140,7 @@ async function loadProducts() {
                             <td>${p.id}</td>
                             <td><img src="${uploadUrl(p.image)}" width="40" height="40" style="object-fit:cover;"></td>
                             <td>${escapeHtml(p.name)}</td>
-                            <td>$${parseFloat(p.price).toFixed(2)}</td>
+                            <td>${formatGhs(p.price)}</td>
                             <td>${p.stock}</td>
                             <td>${p.category || 'Uncategorized'}</td>
                             <td><button class="btn-sm edit-product" data-id="${p.id}">Edit</button> <button class="btn-sm delete-product" data-id="${p.id}">Delete</button></td>
@@ -390,8 +392,8 @@ async function loadRevenueReport() {
         const data = await res.json();
         container.innerHTML = `
             <p><strong>Total Orders:</strong> ${data.totalOrders}</p>
-            <p><strong>Total Revenue:</strong> $${parseFloat(data.totalRevenue).toFixed(2)}</p>
-            <p><strong>Average Order Value:</strong> $${parseFloat(data.averageOrderValue).toFixed(2)}</p>
+            <p><strong>Total Revenue:</strong> ${formatGhs(data.totalRevenue)}</p>
+            <p><strong>Average Order Value:</strong> ${formatGhs(data.averageOrderValue)}</p>
         `;
     } catch (err) {
         container.innerHTML = '<p>Failed to load revenue data.</p>';
@@ -416,7 +418,7 @@ async function loadTopProducts() {
         const data = await res.json();
         if (!data.length) { container.innerHTML = '<p>No sales data.</p>'; return; }
         container.innerHTML = `<table><thead><tr><th>Product</th><th>Units Sold</th><th>Revenue</th></tr></thead><tbody>` +
-            data.map(p => `<tr><td>${escapeHtml(p.name)}</td><td>${p.unitsSold}</td><td>$${parseFloat(p.revenue).toFixed(2)}</td></tr>`).join('') +
+            data.map(p => `<tr><td>${escapeHtml(p.name)}</td><td>${p.unitsSold}</td><td>${formatGhs(p.revenue)}</td></tr>`).join('') +
             `</tbody></table>`;
     } catch (err) {
         container.innerHTML = '<p>Failed to load top products.</p>';
@@ -430,7 +432,7 @@ async function loadTopCustomers() {
         const data = await res.json();
         if (!data.length) { container.innerHTML = '<p>No customer data.</p>'; return; }
         container.innerHTML = `<table><thead><tr><th>Customer</th><th>Orders</th><th>Total Spent</th></tr></thead><tbody>` +
-            data.map(c => `<tr><td>${escapeHtml(c.name)}</td><td>${c.totalOrders}</td><td>$${parseFloat(c.totalSpent).toFixed(2)}</td></tr>`).join('') +
+            data.map(c => `<tr><td>${escapeHtml(c.name)}</td><td>${c.totalOrders}</td><td>${formatGhs(c.totalSpent)}</td></tr>`).join('') +
             `</tbody></table>`;
     } catch (err) {
         container.innerHTML = '<p>Failed to load top customers.</p>';
@@ -444,7 +446,7 @@ async function loadInventoryReport() {
         const data = await res.json();
         if (!data.length) { container.innerHTML = '<p>No inventory data.</p>'; return; }
         container.innerHTML = `<table><thead><tr><th>Product</th><th>Stock</th><th>Price</th></tr></thead><tbody>` +
-            data.map(p => `<tr><td>${escapeHtml(p.name)}</td><td>${p.stock}</td><td>$${parseFloat(p.price).toFixed(2)}</td></tr>`).join('') +
+            data.map(p => `<tr><td>${escapeHtml(p.name)}</td><td>${p.stock}</td><td>${formatGhs(p.price)}</td></tr>`).join('') +
             `</tbody></table>`;
     } catch (err) {
         container.innerHTML = '<p>Failed to load inventory.</p>';
